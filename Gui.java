@@ -21,54 +21,39 @@ import java.awt.event.ActionEvent;
 
 public class Gui {
 	
-	private JFrame frame;
+	private  JFrame frame;
+	
 	private JPanel panel_load;
 	private JPanel panel_info;
-	private JTextField txtLigueucd;
+	private JTextField pathIn;
 	private JButton btnNewButton;
+	
 	private JLabel lblClasses;
 	private JLabel lblMethodes;
 	private JLabel lblAttributs;
 	private JLabel lblAssociations;
 	private JLabel lblSousClasses;
 	private JLabel lblDetails;
+	
 	private JList list_classes;
 	private JList list_sousClasses;
 	private JList list_attributs;
 	private JList list_methodes;
 	private JList list_association;
+	
 	private JTextPane textPane_Details;
-	
-	
-	private Fichier test;
-	
-	
 	
 	private SpringLayout springLayout;
 	private SpringLayout sl_panel_load;
 	private SpringLayout sl_panel_info;
+	
+	private static Fichier file;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		String tab[] = new String[3];
-		tab[0]="a";
-		tab[1]="b";
-		tab[2]="c";
-		String tab2[] = new String[3];
-		tab2[0]="d";
-		tab2[1]="e";
-		tab2[2]="f";
-		String tab3[] = new String[3];
-		tab3[0]="g";
-		tab3[1]="h";
-		tab3[2]="i";
-		//Classe c1 = new Classe(tab, tab, tab);
-		//Classe c2 = new Classe(tab2, tab2, tab2);
-		//Lien l1 = new Lien
-		
-		
+	public static void runGui(Fichier f) {
+		file=f;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -120,14 +105,14 @@ public class Gui {
 		sl_panel_load.putConstraint(SpringLayout.SOUTH, btnNewButton, -10, SpringLayout.SOUTH, panel_load);
 		panel_load.add(btnNewButton);
 		
-		txtLigueucd = new JTextField();
-		sl_panel_load.putConstraint(SpringLayout.WEST, txtLigueucd, 10, SpringLayout.EAST, btnNewButton);
-		sl_panel_load.putConstraint(SpringLayout.SOUTH, txtLigueucd, -10, SpringLayout.SOUTH, panel_load);
-		sl_panel_load.putConstraint(SpringLayout.EAST, txtLigueucd, -10, SpringLayout.EAST, panel_load);
-		txtLigueucd.setText("Ligue.ucd");
-		sl_panel_load.putConstraint(SpringLayout.NORTH, txtLigueucd, 10, SpringLayout.NORTH, panel_load);
-		panel_load.add(txtLigueucd);
-		txtLigueucd.setColumns(10);
+		pathIn = new JTextField();
+		sl_panel_load.putConstraint(SpringLayout.WEST, pathIn, 10, SpringLayout.EAST, btnNewButton);
+		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathIn, -10, SpringLayout.SOUTH, panel_load);
+		sl_panel_load.putConstraint(SpringLayout.EAST, pathIn, -10, SpringLayout.EAST, panel_load);
+		pathIn.setText("Ligue.ucd");
+		sl_panel_load.putConstraint(SpringLayout.NORTH, pathIn, 10, SpringLayout.NORTH, panel_load);
+		panel_load.add(pathIn);
+		pathIn.setColumns(10);
 		frame.getContentPane().add(panel_info);
 		sl_panel_info = new SpringLayout();
 		panel_info.setLayout(sl_panel_info);
@@ -219,7 +204,8 @@ public class Gui {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO load and parse file
-				//changeFullDisplay(new Fichier());
+				TP1.loadFile(pathIn.getText());
+				changeFullDisplay(file);
 			}
 		});
 		
@@ -245,15 +231,61 @@ public class Gui {
 	}
 	
 	
-	private void changeDetailDisplay(Fichier file,String association){
+	private void changeDetailDisplay(Fichier file,String association, int index){
 		//TODO
 	}
-	private void changeClassDisplay(Fichier file,String classe){
-		//TODO
-		changeDetailDisplay(file,"association");
+	
+	
+	private void changeClassDisplay(Fichier file,String classe, int index){
+		Classe c = file.classes[index];
+		int attlength = c.attributs.length;
+		int metlength = c.methodes.length;
+		int ssclength = c.sousClasses.length;
+
+		final String att[] = new String[attlength];
+		final String met[] = new String[metlength];
+		final String ssc[] = new String[ssclength];
+		for (int i = 0 ; i<attlength;i++){
+			att[i]=c.attributs[i];
+		}
+		for (int i = 0 ; i<metlength;i++){
+			met[i]=c.methodes[i];
+		}
+		for (int i = 0 ; i<ssclength;i++){
+			ssc[i]=c.sousClasses[i];
+		}
+
+		changeList(list_attributs,att);
+		changeList(list_methodes,met);
+		changeList(list_sousClasses,ssc);
+
+		changeDetailDisplay(file,"association",0);
 	}
+	
+	
+	
+	
+	
+	
 	private void changeFullDisplay(Fichier file){
-		//TODO
-		changeClassDisplay(file,"classe");
+		int length = file.classes.length;
+		final String classeOut[] = new String[length];
+		for (int i = 0 ; i<length;i++){
+			classeOut[i]=file.classes[i].nom;
+		}
+		changeList(list_classes,classeOut);
+		
+		changeClassDisplay(file,"classe",1);
+	}
+	
+	private void changeList(JList list, final String[] values){
+		list.setModel(new AbstractListModel() {
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
 	}
 }
