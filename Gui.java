@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 
 
 public class Gui {
-
+	
 	private JFrame frame;
 	private JPanel panel_load;
 	private JPanel panel_info;
@@ -39,6 +39,11 @@ public class Gui {
 	private JList list_association;
 	private JTextPane textPane_Details;
 	
+	
+	private Fichier test;
+	
+	
+	
 	private SpringLayout springLayout;
 	private SpringLayout sl_panel_load;
 	private SpringLayout sl_panel_info;
@@ -47,6 +52,23 @@ public class Gui {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		String tab[] = new String[3];
+		tab[0]="a";
+		tab[1]="b";
+		tab[2]="c";
+		String tab2[] = new String[3];
+		tab2[0]="d";
+		tab2[1]="e";
+		tab2[2]="f";
+		String tab3[] = new String[3];
+		tab3[0]="g";
+		tab3[1]="h";
+		tab3[2]="i";
+		//Classe c1 = new Classe(tab, tab, tab);
+		//Classe c2 = new Classe(tab2, tab2, tab2);
+		//Lien l1 = new Lien
+		
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -197,7 +219,7 @@ public class Gui {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO load and parse file
-				changeFullDisplay(new Fichier());
+				//changeFullDisplay(new Fichier());
 			}
 		});
 		
