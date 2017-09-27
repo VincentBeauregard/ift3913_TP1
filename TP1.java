@@ -24,8 +24,10 @@ public class TP1 {
 		Classe cx[] = new Classe[2];
 		cx[0]=c1;
 		cx[1]=c2;
-		Lien l1 = new Lien(cx,tab4,"lien1","detail1");
-	
+		String[] cname= {"c1","c2"};
+		Lien l1 = new Lien(cname,tab4,cname,tab4,"lien1","detail1");
+		c1.addliens(0);
+		c2.addliens(0);
 		Lien lx[] = new Lien[1];
 		lx[0]=l1;
 
