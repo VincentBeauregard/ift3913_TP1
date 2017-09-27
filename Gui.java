@@ -1,5 +1,6 @@
 import java.awt.EventQueue;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.SpringLayout;
@@ -18,6 +19,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+
 import javax.swing.ListSelectionModel;
 
 
@@ -110,11 +113,31 @@ public class Gui {
 		pathIn = new JTextField();
 		sl_panel_load.putConstraint(SpringLayout.WEST, pathIn, 10, SpringLayout.EAST, btnNewButton);
 		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathIn, -10, SpringLayout.SOUTH, panel_load);
-		sl_panel_load.putConstraint(SpringLayout.EAST, pathIn, -10, SpringLayout.EAST, panel_load);
+		sl_panel_load.putConstraint(SpringLayout.EAST, pathIn, 540, SpringLayout.EAST, btnNewButton);
 		pathIn.setText("Ligue.ucd");
 		sl_panel_load.putConstraint(SpringLayout.NORTH, pathIn, 10, SpringLayout.NORTH, panel_load);
 		panel_load.add(pathIn);
 		pathIn.setColumns(10);
+		final JButton pathbtn = new JButton("  ...  ");
+		pathbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Handle open button action.
+
+				final JFileChooser fileChooser = new JFileChooser();
+				int result = fileChooser.showOpenDialog(panel_load);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					pathIn.setText(selectedFile.getAbsolutePath());
+					TP1.loadFile(selectedFile.getAbsolutePath());
+
+				}
+			}
+		});
+		sl_panel_load.putConstraint(SpringLayout.NORTH, pathbtn, 0, SpringLayout.NORTH, btnNewButton);
+		sl_panel_load.putConstraint(SpringLayout.WEST, pathbtn, 6, SpringLayout.EAST, pathIn);
+		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathbtn, 0, SpringLayout.SOUTH, btnNewButton);
+		sl_panel_load.putConstraint(SpringLayout.EAST, pathbtn, -10, SpringLayout.EAST, panel_load);
+		panel_load.add(pathbtn);
 		frame.getContentPane().add(panel_info);
 		sl_panel_info = new SpringLayout();
 		panel_info.setLayout(sl_panel_info);
