@@ -21,4 +21,10 @@ public class Classe {
 		tmp[length] = index;
 		indexLiens=tmp;		
 	}
+	public Classe(String nom, String[] attributs,String[] methodes){
+		this.attributs = attributs;
+		this.methodes = methodes;
+		this.nom = nom;
+		this.indexLiens = new int[0];
+	}
 }

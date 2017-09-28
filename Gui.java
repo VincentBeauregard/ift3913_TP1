@@ -53,12 +53,12 @@ public class Gui{
 	private SpringLayout sl_panel_load;
 	private SpringLayout sl_panel_info;
 	
-	private static Fichier file;
+	private static Model file;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void runGui(Fichier f) {
+	public static void runGui(Model f) {
 		file=f;
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -312,7 +312,7 @@ public class Gui{
 	private void changeDetailString(String details){
 		textPane_Details.setText(details);
 	}
-	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex,String error){
+	private void changeDetailDisplay(Model file,int classeIndex, int lienIndex,String error){
 		if(error == null){
 		Lien l = file.liens[file.classes[classeIndex].indexLiens[lienIndex]];
 		String detailstring="";
@@ -342,7 +342,7 @@ public class Gui{
 	}
 	
 	
-	private void changeClassDisplay(Fichier file, int classeindex,String error){
+	private void changeClassDisplay(Model file, int classeindex,String error){
 		if(error == null){
 		Classe c = file.classes[classeindex];
 		int attlength = c.attributs.length;
@@ -383,7 +383,7 @@ public class Gui{
 	
 	
 	
-	private void changeFullDisplay(Fichier file){
+	private void changeFullDisplay(Model file){
 		this.file = file;
 		if(file.valide==true){
 			int length = file.classes.length;

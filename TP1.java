@@ -1,6 +1,6 @@
 
 public class TP1 {
-	private static Fichier test;
+	private static Model test;
 	private static Gui gui;
 
 	public static void main(String[] args){
@@ -32,13 +32,13 @@ public class TP1 {
 		Lien lx[] = new Lien[1];
 		lx[0]=l1;
 
-		test = new Fichier("test",cx,lx,true);
+		test = new Model("test",cx,lx,true);
 
 		//gui = new Gui();
 		Gui.runGui(test);
 	}
 	
-	public static Fichier loadFile(String path){
+	public static Model loadFile(String path){
 		return fichier.load(path);
 		
 	}
