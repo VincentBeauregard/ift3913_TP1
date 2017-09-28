@@ -24,7 +24,7 @@ import java.io.File;
 import javax.swing.ListSelectionModel;
 
 
-public class Gui {
+public class Gui{
 	
 	private  JFrame frame;
 	
@@ -32,6 +32,7 @@ public class Gui {
 	private JPanel panel_info;
 	private JTextField pathIn;
 	private JButton btnNewButton;
+	private JButton pathbtn;
 	
 	private JLabel lblClasses;
 	private JLabel lblMethodes;
@@ -74,7 +75,7 @@ public class Gui {
 	/**
 	 * Create the application.
 	 */
-	public Gui() {
+	public Gui(){
 		initialize();
 	}
 
@@ -114,25 +115,11 @@ public class Gui {
 		sl_panel_load.putConstraint(SpringLayout.WEST, pathIn, 10, SpringLayout.EAST, btnNewButton);
 		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathIn, -10, SpringLayout.SOUTH, panel_load);
 		sl_panel_load.putConstraint(SpringLayout.EAST, pathIn, 540, SpringLayout.EAST, btnNewButton);
-		pathIn.setText("Ligue.ucd");
 		sl_panel_load.putConstraint(SpringLayout.NORTH, pathIn, 10, SpringLayout.NORTH, panel_load);
 		panel_load.add(pathIn);
 		pathIn.setColumns(10);
-		final JButton pathbtn = new JButton("  ...  ");
-		pathbtn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//Handle open button action.
 
-				final JFileChooser fileChooser = new JFileChooser();
-				int result = fileChooser.showOpenDialog(panel_load);
-				if (result == JFileChooser.APPROVE_OPTION) {
-					File selectedFile = fileChooser.getSelectedFile();
-					pathIn.setText(selectedFile.getAbsolutePath());
-					TP1.loadFile(selectedFile.getAbsolutePath());
-
-				}
-			}
-		});
+		pathbtn = new JButton("  ...  ");
 		sl_panel_load.putConstraint(SpringLayout.NORTH, pathbtn, 0, SpringLayout.NORTH, btnNewButton);
 		sl_panel_load.putConstraint(SpringLayout.WEST, pathbtn, 6, SpringLayout.EAST, pathIn);
 		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathbtn, 0, SpringLayout.SOUTH, btnNewButton);
@@ -240,25 +227,19 @@ public class Gui {
 		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_classes, -10, SpringLayout.SOUTH, panel_info);
 		panel_info.add(scrollPane_classes);
 		
+		String current = System.getProperty("user.dir");
+
+		pathIn.setText(current+"/");
 		
 		
 		
-		list_classes.setModel(new AbstractListModel() {
-			String[] values = new String[] {"value1", "value2", "value3"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
 		list_classes.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
 
                 	int classeIndex = list_classes.getSelectedIndex();
                 	if (classeIndex==-1)classeIndex=0;
-                	changeClassDisplay(file,classeIndex);
+                	changeClassDisplay(file,classeIndex,null);
                 }
             }
         });
@@ -296,8 +277,23 @@ public class Gui {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//TODO load and parse file
-				TP1.loadFile(pathIn.getText());
-				changeFullDisplay(file);
+				//TP1.loadFile(pathIn.getText());
+				changeFullDisplay(TP1.loadFile(System.getProperty("user.dir")+"/"+pathIn.getText()));
+			}
+		});
+		
+		pathbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//Handle open button action.
+
+				final JFileChooser fileChooser = new JFileChooser();
+				int result = fileChooser.showOpenDialog(panel_load);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					pathIn.setText(selectedFile.getAbsolutePath());
+					changeFullDisplay(TP1.loadFile(selectedFile.getAbsolutePath()));
+
+				}
 			}
 		});
 		list_association.addListSelectionListener(new ListSelectionListener() {
@@ -307,14 +303,17 @@ public class Gui {
                 	int associationIndex = list_association.getSelectedIndex();
                 	if (classeIndex==-1)classeIndex=0;
                 	if (associationIndex==-1)associationIndex=0;
-                	changeDetailDisplay(file,classeIndex,associationIndex);
+                	changeDetailDisplay(file,classeIndex,associationIndex,null);
                 }
             }
         });
 	}
 	
-	
-	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex){
+	private void changeDetailString(String details){
+		textPane_Details.setText(details);
+	}
+	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex,String error){
+		if(error == null){
 		Lien l = file.liens[file.classes[classeIndex].indexLiens[lienIndex]];
 		String detailstring="";
 		if (l.type==0){
@@ -323,6 +322,7 @@ public class Gui {
 			for(int i=0;i<nbRoles;i++){
 				detailstring += "\n\t\t" + l.classes[i] +" "+ l.cardinality[i];
 			}
+			
 		}
 		else if (l.type==1){
 			detailstring+="AGGREGATION "+l.nom+"\n\tCONTAINER";
@@ -336,11 +336,14 @@ public class Gui {
 				detailstring += "\n\t\t" + l.parts[i] +" "+ l.cardinality_parts[i];
 			}
 		}
-		textPane_Details.setText(detailstring);
+		changeDetailString(detailstring);
+		}
+		else changeDetailString(error);
 	}
 	
 	
-	private void changeClassDisplay(Fichier file, int classeindex){
+	private void changeClassDisplay(Fichier file, int classeindex,String error){
+		if(error == null){
 		Classe c = file.classes[classeindex];
 		int attlength = c.attributs.length;
 		int metlength = c.methodes.length;
@@ -371,7 +374,8 @@ public class Gui {
 		changeList(list_sousClasses,ssc);
 		changeList(list_association,lin);
 		list_association.setSelectedIndex(0);
-		changeDetailDisplay(file,classeindex,0);
+		changeDetailDisplay(file,classeindex,0,null);}
+		else changeDetailDisplay(file,classeindex,0,error);
 	}
 	
 	
@@ -380,16 +384,20 @@ public class Gui {
 	
 	
 	private void changeFullDisplay(Fichier file){
-		int length = file.classes.length;
-		final String classeOut[] = new String[length];
-		for (int i = 0 ; i<length;i++){
-			classeOut[i]=file.classes[i].nom;
+		this.file = file;
+		if(file.valide==true){
+			int length = file.classes.length;
+			final String classeOut[] = new String[length];
+			for (int i = 0 ; i<length;i++){
+				classeOut[i]=file.classes[i].nom;
+			}
+			changeList(list_classes,classeOut);
+			list_classes.setSelectedIndex(0);
+			changeClassDisplay(file,0,null);
 		}
-		changeList(list_classes,classeOut);
-		list_classes.setSelectedIndex(0);
-
-		
-		changeClassDisplay(file,0);
+		else {
+			changeClassDisplay(file,0,"le fichier \""+pathIn.getText()+"\" est invalide");
+			}
 	}
 	
 	private void changeList(JList list, final String[] values){
