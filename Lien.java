@@ -16,7 +16,8 @@ public class Lien {
 		this.cardinality=cardinality;
 		this.nom=nom;
 		this.detail=detail;
-	}public Lien(String[] container,String[] cardinality_containers,
+	}
+	public Lien(String[] container,String[] cardinality_containers,
 			String[] parts,String[] cardinality_parts,String nom,String detail){
 		this.type=1;
 		this.container=container;

@@ -276,8 +276,8 @@ public class Gui{
 
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO load and parse file
-				//TP1.loadFile(pathIn.getText());
+				System.out.println(pathIn.getText().split(System.getProperty("user.dir")).length);
+				
 				changeFullDisplay(TP1.loadFile(System.getProperty("user.dir")+"/"+pathIn.getText()));
 			}
 		});
@@ -291,6 +291,7 @@ public class Gui{
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
 					pathIn.setText(selectedFile.getAbsolutePath());
+					System.out.println(selectedFile.getAbsolutePath());
 					changeFullDisplay(TP1.loadFile(selectedFile.getAbsolutePath()));
 
 				}
@@ -396,7 +397,7 @@ public class Gui{
 			changeClassDisplay(file,0,null);
 		}
 		else {
-			changeClassDisplay(file,0,"le fichier \""+pathIn.getText()+"\" est invalide");
+			changeClassDisplay(file,0,"Erreur : \""+pathIn.getText()+"\". "+file.modele);
 			}
 	}
 	
