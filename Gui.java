@@ -314,7 +314,7 @@ public class Gui{
 		textPane_Details.setText(details);
 	}
 	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex,String error){
-		if(error == null){
+		if(error == null&&file.liens.length>0&&file.classes[classeIndex].indexLiens.length>0){
 		Lien l = file.liens[file.classes[classeIndex].indexLiens[lienIndex]];
 		String detailstring="";
 		if (l.type==0){

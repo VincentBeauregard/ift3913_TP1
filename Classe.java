@@ -13,12 +13,19 @@ public class Classe {
 		this.nom = nom;
 		this.indexLiens = new int[0];
 	}
-	public void addliens(int index){
+	public void addliens(int index) {
 		int length = indexLiens.length;
 		int tmp[] = new int[length + 1];
-		for(int i=0;i<length;i++)
-			tmp[i]=indexLiens[i];
+		for (int i = 0; i < length; i++)
+			tmp[i] = indexLiens[i];
 		tmp[length] = index;
-		indexLiens=tmp;		
+		indexLiens = tmp;
+	}
+	public void addsousclasse(String toAdd) {
+		String[] temp = new String[sousClasses.length + 1];
+		for (int i = 0; i < sousClasses.length; i++)
+			temp[i] = sousClasses[i];
+		temp[sousClasses.length] = toAdd;
+		sousClasses = temp;
 	}
 }
