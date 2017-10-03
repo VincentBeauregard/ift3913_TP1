@@ -354,7 +354,7 @@ public class Gui{
 		final String att[] = new String[attlength];
 		final String met[] = new String[metlength];
 		final String ssc[] = new String[ssclength];
-		final String lin[] = new String[attlength];
+		final String lin[] = new String[linlength];
 		for (int i = 0 ; i<attlength;i++){
 			att[i]=c.attributs[i];
 		}
@@ -364,9 +364,8 @@ public class Gui{
 		for (int i = 0 ; i<ssclength;i++){
 			ssc[i]=c.sousClasses[i];
 		}
-		Lien l[] = file.liens;
 		for (int i = 0 ; i<linlength;i++){
-			lin[i]=l[c.indexLiens[i]].nom;
+			lin[i]=file.liens[c.indexLiens[i]].nom;
 		}
 		
 

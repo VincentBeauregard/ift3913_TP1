@@ -127,49 +127,90 @@ public class Parse {
                 String nom_lien=part[1].trim();
                 String[] class_concerne=new String[2];
                 String[] cardinalite=new String[2];
-                String detail="";
-                detail+=tokens[i].trim();
+                i++;//TODO check role yo
                 i++;
-                detail+=tokens[i].trim();
-                i++;
-                detail+=tokens[i].trim();
                 part=tokens[i].trim().split(" +");
                 class_concerne[0]=part[1];
-                cardinalite[0]=part[1];
+                cardinalite[0]=part[2];
                 System.out.println(part[1].trim());
                 for (int j=0;j<classe.size();j++ )
                 {
                     if (classe.get(j).nom.equals(part[1].trim()))
                     {
-                        classe.get(j).addliens(lien.length+1);
-                        j=classe.size();
-                        System.out.println("link added1");
+                        classe.get(j).addliens(lien.length);
+                        //System.out.println("link added1");
+						//System.out.println(classe.get(j).indexLiens[0]);
+						j=classe.size();
                     }
                 }
                 i++;
-                detail+=tokens[i].trim();
                 part=tokens[i].trim().split(" +");
-                class_concerne[0]=part[1];
-                cardinalite[0]=part[1];
+                class_concerne[1]=part[1];
+                cardinalite[1]=part[2];
                 for (int j=0;j<classe.size();j++ )
                 {
                     if (classe.get(j).nom.equals(part[1].trim()))
                     {
-                        classe.get(j).addliens(lien.length+1);
-                        j=classe.size();
-                        System.out.println("link added1");
+                        classe.get(j).addliens(lien.length);
+                        //System.out.println("link added1");
+						//System.out.println(classe.get(j).indexLiens[0]);
+						j=classe.size();
                     }
                 }
                 int length = lien.length;
                 Lien tmp[] = new Lien[length + 1];
-                for (int k = 0; k < length; k++)
-                    tmp[k] = lien[k];
-                tmp[length] = new Lien(class_concerne,cardinalite,nom_lien,detail);
+                for (int k = 0; k < length; k++) {
+					tmp[k] = lien[k];
+				}
+                tmp[length] = new Lien(class_concerne,cardinalite,nom_lien);
                 lien = tmp;
             }
+			else if(part[0].trim().equals("AGGREGATION"))
+			{System.out.println("agregation worked");
+			String nom_lien="Aggregation";
+			String[] parts_cardinalite=new String[1];
+			String[] parts=new String[1];
+			String[] container_cardinalite=new String[1];
+			String[] container=new String[1];
 			i++;
-
-
+			i++;
+			part=tokens[i].trim().split(" +");
+			container[0]=part[1];
+			container_cardinalite[0]=part[2];
+			for (int j=0;j<classe.size();j++ )
+			{
+				if (classe.get(j).nom.equals(part[1].trim()))
+				{
+					classe.get(j).addliens(lien.length);
+					//System.out.println("link added1");
+					//System.out.println(classe.get(j).indexLiens[0]);
+					j=classe.size();
+				}
+			}
+			i++;
+			i++;
+			part=tokens[i].trim().split(" +");
+			parts[0]=part[1];
+			parts_cardinalite[0]=part[2];
+			for (int j=0;j<classe.size();j++ )
+			{
+				if (classe.get(j).nom.equals(part[1].trim()))
+				{
+					classe.get(j).addliens(lien.length);
+					//System.out.println("link added1");
+					//System.out.println(classe.get(j).indexLiens[0]);
+					j=classe.size();
+				}
+			}
+			int length = lien.length;
+			Lien tmp[] = new Lien[length + 1];
+			for (int k = 0; k < length; k++) {
+				tmp[k] = lien[k];
+			}
+			tmp[length] = new Lien(container,container_cardinalite, parts,parts_cardinalite,nom_lien);
+			lien = tmp;
+			}
+			i++;
 		}
 		//for (int x)
 		classarray= classe.toArray(new Classe[0]);
