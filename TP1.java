@@ -39,7 +39,7 @@ public class TP1 {
 	}
 	
 	public static Fichier loadFile(String path){
-		return Parse.load(path);
+		return Parse2.load(path);
 		
 	}
 }
