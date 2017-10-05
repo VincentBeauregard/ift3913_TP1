@@ -146,31 +146,40 @@ public class Parse2 {
                 Boolean flag=true;
                 while(!classtokens[i].equals("OPERATIONS")&&flag==true)
                 {
-                    attAdd+=classtokens[i];
-                    i++;
-                    if (classtokens[i].indexOf(',')<0) {flag=false;
+                    if (classtokens[i].indexOf(',')>0)
+                    {
+                        flag=false;
+                        attAdd+=classtokens[i].substring(0, classtokens[i].length() - 1)+" ";
+                        i++;
+                    }
+                    else{
+                        attAdd+=classtokens[i]+ " ";
+                        i++;
                     }
                 }
                 att.add(attAdd);
             }
-            String[] attribute=att.toArray(new String[0]);
             i++;
+            String[] attribute=att.toArray(new String[0]);
             List<String> ope=new ArrayList<String>();;
             while(!classtokens[i].equals(";"))
             {
               String opeAdd="";
               Boolean flag=true;
-                while(!classtokens[i].equals(";")&&flag==true)
-                {
-                 opeAdd+=classtokens[i];
-                 i++;
-                 if (classtokens[i].indexOf(',')>0)
-                 {
-                     flag=false;
-                 }
+                while(!classtokens[i].equals(";")&&flag==true) {
+                    if (classtokens[i].indexOf(',')>0)
+                    {
+                        flag=false;
+                        opeAdd+=classtokens[i].substring(0, classtokens[i].length() - 1)+" ";
+                        i++;
+                    }
+                    else{
+                        opeAdd+=classtokens[i]+ " ";
+                        i++;
+                    }
                 }
-            att.add(opeAdd);
-        }
+                ope.add(opeAdd);
+            }
             String[] operation=ope.toArray(new String[0]);
             String[] liens=new String[0];
             classe.add(new Classe(Classnom,attribute,operation,liens));
@@ -178,14 +187,22 @@ public class Parse2 {
     }
     public static void treatGen(String[] classtokens, List<Classe> classe )
     {
-        String class_concerne=classtokens[1];
-        for (int j=3;j<classe.size();j++ )
+        String class_concerne=classtokens[1].trim();
+        for (int j=0;j<classe.size();j++ )
         {
             if (classe.get(j).nom.equals(class_concerne))
             {
-                while(!classtokens[j].equals(";")) {
-
-                    classe.get(j).addsousclasse(classtokens[j]);
+                int i=3;
+                while(!classtokens[i].equals(";")) {
+                    if (classtokens[i].indexOf(',')>0)
+                    {
+                        classe.get(j).addsousclasse(classtokens[i].substring(0, classtokens[i].length() - 1)+" ");
+                        i++;
+                    }
+                    else{
+                        classe.get(j).addsousclasse(classtokens[i]);
+                        i++;
+                    }
                 }
             }
         }

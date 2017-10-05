@@ -365,7 +365,6 @@ public class Gui{
 		for (int i = 0 ; i<ssclength;i++){
 			ssc[i]=c.sousClasses[i];
 		}
-		System.out.println(linlength);
 		for (int i = 0 ; i<linlength;i++){
 			lin[i]=file.liens[c.indexLiens[i]].nom;
 		}
