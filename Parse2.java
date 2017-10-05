@@ -79,9 +79,9 @@ public class Parse2 {
                     i++;
                 }
                 String[] classtokens=new String[i-start+1];
-                for (int j=i-start;j<=i;j++)
+                for (int j=i;j>=start;j--)
                 {
-                    classtokens[j-(i-start)]=tokens[j];
+                    classtokens[j-start]=tokens[j];
                 }
                 treatClass(classtokens,classe);
             }
@@ -92,10 +92,10 @@ public class Parse2 {
                 {
                     i++;
                 }
-                String[] classtokens=new String[i-start];
-                for (int j=i-start;j<=i;j++)
+                String[] classtokens=new String[i-start+1];
+                for (int j=i;j>=start;j--)
                 {
-                    classtokens[j-(i-start)]=tokens[j];
+                    classtokens[j-start]=tokens[j];
                 }
                 treatGen(classtokens,classe);
             }
@@ -106,12 +106,13 @@ public class Parse2 {
                 {
                     i++;
                 }
-                String[] classtokens=new String[i-start];
-                for (int j=i-start;j<=i;j++)
+                String[] classtokens=new String[i-start+1];
+                for (int j=i;j>=start;j--)
                 {
-                    classtokens[j-(i-start)]=tokens[j];
+                    classtokens[j-start]=tokens[j];
                 }
                 treatRel(classtokens,lien,classe);
+                System.out.println(lien.length);
             }
             else if(tokens[i].equals("AGGREGATION"))
             {
@@ -120,12 +121,13 @@ public class Parse2 {
                 {
                     i++;
                 }
-                String[] classtokens=new String[i-start];
-                for (int j=i-start;j<=i;j++)
+                String[] classtokens=new String[i-start+1];
+                for (int j=i;j>=start;j--)
                 {
-                    classtokens[j-(i-start)]=tokens[j];
+                    classtokens[j-start]=tokens[j];
                 }
                 treatAgg(classtokens,lien,classe);
+                System.out.println(lien.length);
             }
             i++;
         }
@@ -159,7 +161,7 @@ public class Parse2 {
               String opeAdd="";
               Boolean flag=true;
                 while(!classtokens[i].equals(";")&&flag==true)
-                {System.out.println(classtokens[i]);
+                {
                  opeAdd+=classtokens[i];
                  i++;
                  if (classtokens[i].indexOf(',')>0)
@@ -193,13 +195,13 @@ public class Parse2 {
         String nom_lien=reltokens[1];
         String[] class_concerne=new String[2];
         String[] cardinalite=new String[2];
-        class_concerne[0]=reltokens[5];
-        cardinalite[0]=reltokens[6];
-        class_concerne[1]=reltokens[8];
-        cardinalite[1]=reltokens[9];
+        class_concerne[0]=reltokens[4];
+        cardinalite[0]=reltokens[5];
+        class_concerne[1]=reltokens[7];
+        cardinalite[1]=reltokens[8];
         for (int j=0;j<classe.size();j++ )
         {
-            if (classe.get(j).nom.equals(class_concerne[0])||classe.get(j).nom.equals(class_concerne[1]))
+            if (classe.get(j).nom.trim().equals(class_concerne[0].trim())||classe.get(j).nom.trim().equals(class_concerne[1].trim()))
             {
                 classe.get(j).addliens(lien.length);
             }
@@ -209,8 +211,8 @@ public class Parse2 {
         for (int k = 0; k < length; k++) {
             tmp[k] = lien[k];
         }
-        tmp[length] = new Lien(class_concerne,cardinalite,nom_lien);
         lien = tmp;
+        lien[length] = new Lien(class_concerne,cardinalite,nom_lien);
     }
 
     public static void treatAgg(String[] aggtokens, Lien[] lien,List<Classe>classe)
@@ -253,7 +255,6 @@ public class Parse2 {
             for (int j=0;j<classe.size();j++ )
             {
                for (int k=0;k<cont.size();k++) {
-
                    if (classe.get(j).nom.equals(cont.get(k))) {
                        classe.get(j).addliens(lien.length);
                    }
@@ -275,8 +276,8 @@ public class Parse2 {
             container_cardinalite= cont_card.toArray(new String[0]);
             parts= partss.toArray(new String[0]);
             parts_cardinalite= parts_card.toArray(new String[0]);
-            tmp[length] = new Lien(container,container_cardinalite, parts,parts_cardinalite,nom_lien);
             lien = tmp;
+            lien[length] = new Lien(container,container_cardinalite, parts,parts_cardinalite,nom_lien);
 
     }
 }
