@@ -39,6 +39,7 @@ public class TP1 {
 	}
 	
 	public static Fichier loadFile(String path){
+		System.out.println("path : "+path);
 		return Parse2.load(path);
 		
 	}

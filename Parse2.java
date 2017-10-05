@@ -9,15 +9,15 @@ import java.util.List;
 
 public class Parse2 {
     public static Fichier load(String pathString) {
-        Path path=FileSystems.getDefault().getPath(pathString);
         List<String> lines = null;
         String[] linelist=null;
         String[] tokens = new String[0];
         String[] tempTokens=null;
+        Path path=FileSystems.getDefault().getPath(pathString);
         try {
             //this returns null
             lines = Files.readAllLines(path, Charset.defaultCharset());
-            System.out.println(lines);
+            //System.out.println(lines);
             linelist = lines.toArray(new String[0]);
 
 
@@ -111,8 +111,8 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
-                treatRel(classtokens,lien,classe);
-                System.out.println(lien.length);
+                lien = treatRel(classtokens,lien,classe);
+                //System.out.println("lien.length parse2if1 : "+lien.length);
             }
             else if(tokens[i].equals("AGGREGATION"))
             {
@@ -126,8 +126,8 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
-                treatAgg(classtokens,lien,classe);
-                System.out.println(lien.length);
+                lien = treatAgg(classtokens,lien,classe);
+                //System.out.println("lien.length parse2if2: "+lien.length);
             }
             i++;
         }
@@ -190,7 +190,7 @@ public class Parse2 {
             }
         }
     }
-    public static void treatRel(String[] reltokens, Lien[] lien,List<Classe>classe)
+    public static Lien[] treatRel(String[] reltokens, Lien[] lien,List<Classe>classe)
     {
         String nom_lien=reltokens[1];
         String[] class_concerne=new String[2];
@@ -213,9 +213,10 @@ public class Parse2 {
         }
         lien = tmp;
         lien[length] = new Lien(class_concerne,cardinalite,nom_lien);
+        return lien;
     }
 
-    public static void treatAgg(String[] aggtokens, Lien[] lien,List<Classe>classe)
+    public static Lien[] treatAgg(String[] aggtokens, Lien[] lien,List<Classe>classe)
     {
             String nom_lien="Aggregation";
             List<String> parts_card= new ArrayList<String>();
@@ -278,6 +279,6 @@ public class Parse2 {
             parts_cardinalite= parts_card.toArray(new String[0]);
             lien = tmp;
             lien[length] = new Lien(container,container_cardinalite, parts,parts_cardinalite,nom_lien);
-
+            return lien;
     }
 }

@@ -277,8 +277,9 @@ public class Gui{
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(pathIn.getText().split(System.getProperty("user.dir")).length);
+				System.out.println("in : "+pathIn.getText());
 				
-				changeFullDisplay(TP1.loadFile(System.getProperty("user.dir")+"/"+pathIn.getText()));
+				changeFullDisplay(TP1.loadFile(pathIn.getText()));
 			}
 		});
 		
@@ -366,7 +367,6 @@ public class Gui{
 		}
 		System.out.println(linlength);
 		for (int i = 0 ; i<linlength;i++){
-			System.out.println(c.indexLiens[i]);
 			lin[i]=file.liens[c.indexLiens[i]].nom;
 		}
 		
