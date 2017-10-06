@@ -61,6 +61,9 @@ public class Parse2 {
         Classe[] classarray;
         String nom_model="";
         Lien[] lien =new Lien[0];
+        List<String[]> gen= new ArrayList<String[]>();
+        List<String[]> rel= new ArrayList<String[]>();
+        List<String[]> agg= new ArrayList<String[]>();
         if (!tokens[0].equals("MODEL"))
         {
             return new Fichier(null,null,null,false);
@@ -97,7 +100,7 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
-                treatGen(classtokens,classe);
+                gen.add(classtokens);
             }
             else if(tokens[i].equals("RELATION"))
             {
@@ -111,7 +114,7 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
-                lien = treatRel(classtokens,lien,classe);
+                rel.add(classtokens);
                 //System.out.println("lien.length parse2if1 : "+lien.length);
             }
             else if(tokens[i].equals("AGGREGATION"))
@@ -126,10 +129,19 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
-                lien = treatAgg(classtokens,lien,classe);
+                agg.add(classtokens);
                 //System.out.println("lien.length parse2if2: "+lien.length);
             }
             i++;
+        }
+        for (int i=0;i<gen.size();i++) {
+            treatGen(gen.get(i), classe);
+        }
+        for (int i=0;i<rel.size();i++) {
+            lien = treatRel(rel.get(i),lien,classe);
+        }
+        for (int i=0;i<agg.size();i++) {
+            lien = treatAgg(agg.get(i),lien,classe);
         }
         classarray= classe.toArray(new Classe[0]);
 
