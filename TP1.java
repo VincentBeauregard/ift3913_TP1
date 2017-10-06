@@ -38,6 +38,8 @@ public class TP1 {
 		Gui.runGui();
 	}
 	
+	// effectue la communication entre parse et Gui
+	//envoie le path de gui a parse et parse retourne un objet Fichier
 	public static Fichier loadFile(String path){
 		System.out.println("path : "+path);
 		return Parse2.load(path);
