@@ -1,10 +1,11 @@
 
 public class TP1 {
-	private static Fichier test;
+	//private static Fichier test;
 	private static Gui gui;
 
 	public static void main(String[] args){
-	
+	//creation d'un fichier test pour le debug
+		/*
 		String tab[] = new String[3];
 		tab[0]="a";
 		tab[1]="b";
@@ -33,9 +34,8 @@ public class TP1 {
 		lx[0]=l1;
 
 		test = new Fichier("test",cx,lx,true);
-
-		//gui = new Gui();
-		Gui.runGui(test);
+		*/
+		Gui.runGui();
 	}
 	
 	public static Fichier loadFile(String path){
