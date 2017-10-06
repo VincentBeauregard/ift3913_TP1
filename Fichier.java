@@ -4,6 +4,7 @@ public class Fichier {
     public Lien liens[];
     public boolean valide;
     public String modele;
+    //Constructeur de Fichier
     public Fichier(String modele,Classe classes[],Lien liens[], boolean valide){
         this.valide=valide;
         this.classes = classes;

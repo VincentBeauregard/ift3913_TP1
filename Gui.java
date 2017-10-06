@@ -1,5 +1,4 @@
 import java.awt.EventQueue;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -26,6 +25,7 @@ import javax.swing.ListSelectionModel;
 
 public class Gui{
 	
+	//instantiation des variables globales de l'interface graphique
 	private  JFrame frame;
 	
 	private JPanel panel_load;
@@ -53,13 +53,13 @@ public class Gui{
 	private SpringLayout sl_panel_load;
 	private SpringLayout sl_panel_info;
 	
+	
 	private static Fichier file;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void runGui(Fichier f) {
-		file=f;
+	public static void runGui() {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -233,16 +233,7 @@ public class Gui{
 		
 		
 		
-		list_classes.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (!arg0.getValueIsAdjusting()) {
-
-                	int classeIndex = list_classes.getSelectedIndex();
-                	if (classeIndex==-1)classeIndex=0;
-                	changeClassDisplay(file,classeIndex,null);
-                }
-            }
-        });
+		
 		JScrollPane scrollPane_attributs = new JScrollPane(list_attributs);
 		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_attributs, 140, SpringLayout.SOUTH, lblAttributs);
 		sl_panel_info.putConstraint(SpringLayout.EAST, list_sousClasses, 0, SpringLayout.EAST, scrollPane_attributs);
@@ -273,7 +264,8 @@ public class Gui{
 		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_association, -10, SpringLayout.EAST, panel_info);
 		panel_info.add(scrollPane_association);
 		
-
+		// Action du bouton *Charger fichier*
+		//prend le chemin dans la boite de text pathIn et l'envoie a TP1 pour parser le fichier
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(pathIn.getText().split(System.getProperty("user.dir")).length);
@@ -282,7 +274,10 @@ public class Gui{
 				changeFullDisplay(TP1.loadFile(pathIn.getText()));
 			}
 		});
-		
+
+		// Action du bouton *...*
+		//Active le navigateur de fichier
+		//prend le chemin en resultat et l'envoie a TP1 pour parser le fichier
 		pathbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Handle open button action.
@@ -298,6 +293,23 @@ public class Gui{
 				}
 			}
 		});
+		
+		// Action de la liste de classe lors d'une selection
+		//Active l'affichage concordant avec la classe selectionner
+		list_classes.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent arg0) {
+                if (!arg0.getValueIsAdjusting()) {
+
+                	int classeIndex = list_classes.getSelectedIndex();
+                	if (classeIndex==-1)classeIndex=0;
+                	changeClassDisplay(file,classeIndex,null);
+                }
+            }
+        });
+		
+
+		// Action de la liste de liaison lors d'une selection
+		//Active l'affichage concordant avec la liaison selectionner
 		list_association.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
@@ -311,9 +323,13 @@ public class Gui{
         });
 	}
 	
+	//Change l'affichage de la boite detail selon le string en parametre
 	private void changeDetailString(String details){
 		textPane_Details.setText(details);
 	}
+	
+	//prepare l'affichage de la boite detail dependament que ce soit une relation ou une aggregation
+	//qui fut selectionnee
 	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex,String error){
 		if(error == null&&file.liens.length>0&&file.classes[classeIndex].indexLiens.length>0){
 		Lien l = file.liens[file.classes[classeIndex].indexLiens[lienIndex]];
@@ -343,7 +359,7 @@ public class Gui{
 		else changeDetailString(error);
 	}
 	
-	
+	//Change l'affichage selon la classe selectionner
 	private void changeClassDisplay(Fichier file, int classeindex,String error){
 		if(error == null){
 		Classe c = file.classes[classeindex];
@@ -383,7 +399,7 @@ public class Gui{
 	
 	
 	
-	
+	//change l'afichage complet apres le chargement d'un nouveau fichier
 	private void changeFullDisplay(Fichier file){
 		this.file = file;
 		if(file.valide==true){
@@ -401,6 +417,7 @@ public class Gui{
 			}
 	}
 	
+	//fonction general qui change le contenu d'un JList present dans les variable global.
 	private void changeList(JList list, final String[] values){
 		list.setModel(new AbstractListModel() {
 			public int getSize() {

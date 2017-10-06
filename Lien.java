@@ -9,12 +9,15 @@ public class Lien {
 	public String parts[];
 	public String cardinality_parts[];
 	
+	//Constructeur de relation
 	public Lien(String[] classes,String[] cardinality,String nom){
 		this.type=0;
 		this.classes=classes;
 		this.cardinality=cardinality;
 		this.nom=nom;
-	}
+	}	
+	
+	//Constructeur d'aggregation
 	public Lien(String[] container,String[] cardinality_containers,
 			String[] parts,String[] cardinality_parts,String nom){
 		this.type=1;
