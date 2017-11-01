@@ -265,7 +265,7 @@ public class Gui{
 		panel_info.add(scrollPane_association);
 		
 		// Action du bouton *Charger fichier*
-		//prend le chemin dans la boite de text pathIn et l'envoie a TP1 pour parser le fichier
+		//prend le chemin dans la boite de text 'pathIn' et l'envoie a TP1 pour parser le fichier
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(pathIn.getText().split(System.getProperty("user.dir")).length);
@@ -277,7 +277,7 @@ public class Gui{
 
 		// Action du bouton *...*
 		//Active le navigateur de fichier
-		//prend le chemin en resultat et l'envoie a TP1 pour parser le fichier
+		//prend le chemin en resultat et l'envoie a TP1 pour parser le fichier 
 		pathbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//Handle open button action.
@@ -295,7 +295,7 @@ public class Gui{
 		});
 		
 		// Action de la liste de classe lors d'une selection
-		//Active l'affichage concordant avec la classe selectionner
+		//Active le changement d'affichage concordant avec la classe selectionner
 		list_classes.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
@@ -309,7 +309,7 @@ public class Gui{
 		
 
 		// Action de la liste de liaison lors d'une selection
-		//Active l'affichage concordant avec la liaison selectionner
+		//Active le changement d'affichage concordant avec la liaison selectionner
 		list_association.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
@@ -407,7 +407,7 @@ public class Gui{
 	
 	
 	
-	//change l'afichage complet apres le chargement d'un nouveau fichier
+	//change l'affichage complet apres le chargement d'un nouveau fichier
 	private void changeFullDisplay(Fichier file){
 		this.file = file;
 		if(file.valide==true){
@@ -425,7 +425,7 @@ public class Gui{
 			}
 	}
 	
-	//fonction general qui change le contenu d'un JList present dans les variable global.
+	//fonction general qui change le contenu d'un JList present dans les variables globals.
 	private void changeList(JList list, final String[] values){
 		list.setModel(new AbstractListModel() {
 			public int getSize() {
