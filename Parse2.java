@@ -228,7 +228,7 @@ public class Parse2 {
             Methode[] operation=ope.toArray(new Methode[0]);
             String[] liens=new String[0];
             //cree la classe
-            classe.add(new Classe(Classnom,attribute,operation,liens));
+            classe.add(new Classe(Classnom,attribute,operation));
 
     }
     //cette fonction modifie la liste sous-classe de la classe concerne
@@ -241,16 +241,30 @@ public class Parse2 {
             {
                 int i=3;
                 while(!classtokens[i].equals(";")) {
-                    if (classtokens[i].indexOf(',')>0)
-                    {
-                        //enleve la virgule a la fin des mots si necessaire
-                        classe.get(j).addsousclasse(classtokens[i].substring(0, classtokens[i].length() - 1)+" ");
+                    if(classtokens[i].equals(",")){
                         i++;
+                    }
+                    else if (classtokens[i].indexOf(',')>0)
+                    {
+                        for (int k=0;k<classe.size();k++ ) {
+                            if (classe.get(k).nom.equals(classtokens[i].substring(0, classtokens[i].length() - 1))) {
+                                //enleve la virgule a la fin des mots si necessaire
+                                classe.get(j).addsousclasse( classe.get(k));
+                                classe.get(k).addsurclasse( classe.get(j));
+                            }
+
+                        }
+
                     }
                     else{
-                        classe.get(j).addsousclasse(classtokens[i]);
-                        i++;
+                        for (int k=0;k<classe.size();k++ ) {
+                            if (classe.get(k).nom.equals(classtokens[i])) {
+                                classe.get(j).addsousclasse( classe.get(k));
+                                classe.get(k).addsurclasse( classe.get(j));
+                            }
+                        }
                     }
+                    i++;
                 }
             }
         }

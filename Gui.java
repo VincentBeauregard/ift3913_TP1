@@ -426,7 +426,7 @@ public class Gui{
 			//System.out.println(c.methodes[i].type);
 		}
 		for (int i = 0 ; i<ssclength;i++){
-			ssc[i]=c.sousClasses[i];
+			ssc[i]=c.sousClasses[i].nom;
 		}
 		for (int i = 0 ; i<linlength;i++){
 			lin[i]=file.liens[c.indexLiens[i]].nom;

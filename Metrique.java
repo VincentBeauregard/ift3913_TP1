@@ -2,12 +2,20 @@
 public class Metrique {
 	
 	public static String calculMetrique(Classe classe){
+		String ANA = calcul_ANA(classe);
 		return "0,1,2,3,4,5,6,7,8,9";
 		
 	}
-	public String calcul_ANA(Classe classe){
-		return null;
-		
+	public static String calcul_ANA(Classe classe){
+		int nb=classe.methodes.length;
+		int count=0;
+		for (int i=0;i<nb;i++)
+		{
+			count+=classe.methodes[i].arg.length;
+		}
+
+		return String.valueOf(count/nb);
+
 	}
 	public String calcul_NOM(Classe classe){
 		return null;
