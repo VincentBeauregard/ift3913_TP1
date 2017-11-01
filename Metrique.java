@@ -6,7 +6,8 @@ public class Metrique {
 	public static String calculMetrique(Classe classe){
 		String ANA = calcul_ANA(classe);
 		String NOM = calcul_NOM(classe);
-		return ANA+","+NOM+",2,3,4,5,6,7,8,9";
+		String NOA = calcul_NOA(classe);
+		return ANA+","+NOM+","+NOA+",3,4,5,6,7,8,9";
 		
 	}
 	public static String getMetric(Classe classe){
@@ -52,9 +53,9 @@ public class Metrique {
 			}
 
 		}
-		for (int i=0;i<classe.sousClasses.length;i++)
+		for (int i=0;i<classe.surClasses.length;i++)
 		{
-			recCheck(met, classe.sousClasses[i]);
+			recCheck(met, classe.surClasses[i]);
 		}
 		System.out.println(met.size());
 		return;
@@ -81,9 +82,39 @@ public class Metrique {
 		}
 		return false;
 	}
-	public String calcul_NOA(Classe classe){
-		return null;
+	public static String calcul_NOA(Classe classe){
+		List<Attribut> att=new ArrayList<Attribut>();
+		recCheckAtt(att,classe);
+		System.out.println(att.size());
+		return String.valueOf(att.size());
 		
+	}
+	public static void recCheckAtt(List<Attribut> att, Classe classe) {
+
+		for (int i=0;i<classe.attributs.length;i++)
+		{
+			if (!checkSameAtt(att,classe.attributs[i] )){
+				att.add(classe.attributs[i]);
+			}
+
+		}
+		for (int i=0;i<classe.surClasses.length;i++)
+		{
+			recCheckAtt(att, classe.surClasses[i]);
+		}
+		System.out.println(att.size());
+		return;
+	}
+	public static Boolean checkSameAtt (List<Attribut> att, Attribut toCheck)
+	{
+		for (int i=0; i<att.size();i++)
+		{
+			if ((att.get(i).nom).equals(toCheck.nom)&&(att.get(i).type).equals(toCheck.type))
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	public String calcul_ITC(Classe classe){
 		return null;
