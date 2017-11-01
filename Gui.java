@@ -366,6 +366,10 @@ public class Gui{
 		textPane_Details.setText(details);
 	}
 	
+	private void changeMetricString(String metrics){
+		textPane_metrique.setText(metrics);
+	}
+	
 	//prepare l'affichage de la boite detail dependament que ce soit une relation ou une aggregation
 	//qui fut selectionnee
 	private void changeDetailDisplay(Fichier file,int classeIndex, int lienIndex,String error){
@@ -438,6 +442,7 @@ public class Gui{
 		changeList(list_sousClasses,ssc);
 		changeList(list_association,lin);
 		list_association.setSelectedIndex(0);
+		changeMetricString(TP1.getMetric(c));
 		changeDetailDisplay(file,classeindex,0,null);}
 		else changeDetailDisplay(file,classeindex,0,error);
 	}
