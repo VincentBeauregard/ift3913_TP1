@@ -23,11 +23,14 @@ public class Parse2 {
 
             //cette boucle divise les lignes du fichier en mots et les store dans le tableau tokens
             for (int i = 0; i < linelist.length; i++) {
+                linelist[i].replace(":","  ");
+                linelist[i].replace("("," ( ");
+                linelist[i].replace(")"," ) ");
                 tempTokens=linelist[i].trim().split(" +");
                 int length = tokens.length;
                 String tmp[] = new String[length + tempTokens.length];
                 for (int j = 0; j < length; j++) {
-                    tmp[j] = tokens[j];
+                    tmp[j] = tokens[j].trim();
                 }
                 tokens=tmp;
                 for (int j = length; j < length+tempTokens.length; j++) {
@@ -147,51 +150,74 @@ public class Parse2 {
     {
             //
             String Classnom=classtokens[1];
-            List<String> att=new ArrayList<String>();
+            List<Attribut> att=new ArrayList<Attribut>();
             int i=3;
             //cette boucle place tout les attributs dans une liste
             while(!classtokens[i].equals("OPERATIONS"))
             {
-                String attAdd="";
-                Boolean flag=true;
-                while(!classtokens[i].equals("OPERATIONS")&&flag==true)
-                {
-                    if (classtokens[i].indexOf(',')>0)
-                    {
-                        flag=false;
-                        attAdd+=classtokens[i].substring(0, classtokens[i].length() - 1)+" ";
-                        i++;
-                    }
-                    else{
-                        attAdd+=classtokens[i]+ " ";
-                        i++;
-                    }
+                String nom=classtokens[i];
+                String type="";
+                i++;
+                if (classtokens[i].indexOf(',')>0) {
+                    type = classtokens[i].substring(0, classtokens[i].length() - 1);
                 }
-                att.add(attAdd);
+                else
+                {
+                    type = classtokens[i];
+                }
+
+                att.add(new Attribut(nom, type));
             }
             i++;
-            String[] attribute=att.toArray(new String[0]);
-            List<String> ope=new ArrayList<String>();;
+            Attribut[] attribute=att.toArray(new Attribut[0]);
+            List<Methode> ope=new ArrayList<Methode>();;
             //cette boucle place toute les operations dans une liste
             while(!classtokens[i].equals(";"))
             {
-              String opeAdd="";
-              Boolean flag=true;
-                while(!classtokens[i].equals(";")&&flag==true) {
-                    if (classtokens[i].indexOf(',')>0)
-                    {
-                        flag=false;
-                        opeAdd+=classtokens[i].substring(0, classtokens[i].length() - 1)+" ";
-                        i++;
-                    }
-                    else{
-                        opeAdd+=classtokens[i]+ " ";
-                        i++;
-                    }
+                if (classtokens[i].equals(","))
+                {
+                    i++;
                 }
-                ope.add(opeAdd);
+              List<Attribut> attOpp=new ArrayList<Attribut>();
+              String nom=classtokens[i];
+              String typeAtt="";
+              String type="";
+              i++;
+              if (classtokens[i].equals("("))
+              {
+                  i++;
+                  while(!classtokens[i].equals(")"))
+                  {
+                      String nomAtt=classtokens[i];
+                      i++;
+
+                      if (classtokens[i].equals(","))
+                      {
+                          i++;
+                      }
+                      else if (classtokens[i].indexOf(',')>0) {
+                          typeAtt = classtokens[i].substring(0, classtokens[i].length() - 1);
+                      }
+                      attOpp.add(new Attribut(nomAtt, typeAtt));
+                  }
+                  i++;
+                  if (classtokens[i].equals(","))
+                  {
+                      i++;
+                  }
+                  if (classtokens[i].indexOf(',')>0) {
+                      type = classtokens[i].substring(0, classtokens[i].length() - 1);
+                  }
+                  else{
+                      type = classtokens[i];
+                  }
+                  i++;
+
+              }
+              Attribut[] arg=attOpp.toArray(new Attribut[0]);
+              ope.add(new Methode(nom, type, arg));
             }
-            String[] operation=ope.toArray(new String[0]);
+            Methode[] operation=ope.toArray(new Methode[0]);
             String[] liens=new String[0];
             //cree la classe
             classe.add(new Classe(Classnom,attribute,operation,liens));

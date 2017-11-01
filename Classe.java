@@ -1,13 +1,13 @@
 
 public class Classe {
-	public String attributs[];
-	public String methodes[];
+	public Attribut attributs[];
+	public Methode methodes[];
 	public String sousClasses[];
 	public int indexLiens[];
 	public String nom;
 	
 	//Constructeur
-	public Classe(String nom, String[] attributs,String[]methodes,String[] sousClasses){
+	public Classe(String nom, Attribut[] attributs,Methode[]methodes,String[] sousClasses){
 		this.attributs = attributs;
 		this.methodes = methodes;
 		this.sousClasses = sousClasses;

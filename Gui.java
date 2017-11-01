@@ -411,10 +411,18 @@ public class Gui{
 		final String ssc[] = new String[ssclength];
 		final String lin[] = new String[linlength];
 		for (int i = 0 ; i<attlength;i++){
-			att[i]=c.attributs[i];
+			att[i]=c.attributs[i].nom+" "+c.attributs[i].type;
 		}
 		for (int i = 0 ; i<metlength;i++){
-			met[i]=c.methodes[i];
+			String temp ="";
+			for (int j = 0; j<c.methodes[i].arg.length; j++)
+			{
+				temp+=c.methodes[i].arg[j].nom+" "+c.methodes[i].arg[j].type+" ";
+			}
+			met[i]+=c.methodes[i].nom+" "+temp+" "+c.methodes[i].type;
+			System.out.println(c.methodes[i].nom);
+			System.out.println(temp);
+			System.out.println(c.methodes[i].type);
 		}
 		for (int i = 0 ; i<ssclength;i++){
 			ssc[i]=c.sousClasses[i];
