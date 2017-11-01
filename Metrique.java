@@ -5,12 +5,14 @@ public class Metrique {
 	
 	public static String calculMetrique(Classe classe, Fichier file){
 		List<Methode> met=new ArrayList<Methode>();
+		List<Methode> metOther=new ArrayList<Methode>();
 		List<Attribut> att=new ArrayList<Attribut>();
 		String ANA = calcul_ANA(classe);
 		String NOM = calcul_NOM(classe,met);
 		String NOA = calcul_NOA(classe,att);
 		String ITC = calcul_ITC(classe, met, file);
-		return ANA+","+NOM+","+NOA+","+ITC+",4,5,6,7,8,9";
+		String ETC = calcul_ETC(classe, met, metOther, file);
+		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+",4,5,6,7,8,9";
 		
 	}
 	public static String getMetric(Classe classe, Fichier file){
@@ -139,11 +141,49 @@ public class Metrique {
 		return String.valueOf(count);
 		
 	}
-	public static String calcul_ETC(Classe classe){
-		return null;
+	public static String calcul_ETC(Classe classe, List<Methode>met, List<Methode>metOther, Fichier file){
+
+		metOther=otherMed(classe,met,metOther,file);
+		int count=0;
+		for(int i=0; i<metOther.size();i++)
+		{
+			for (int k=0; k<metOther.get(i).arg.length;k++)
+			{
+
+				if (metOther.get(i).arg[k].type.equals(classe.nom))
+				{
+					count++;
+				}
+
+
+
+			}
+		}
+		return String.valueOf(count);
 		
 	}
 
+	public static List<Methode> otherMed(Classe classe, List<Methode>met,List<Methode>metOther, Fichier file)
+	{
+		for (int j=0;j<file.classes.length;j++)
+		{
+			if ((!file.classes[j].nom.equals(classe.nom)))
+			{
+				for (int i=0; i<file.classes[j].methodes.length;i++)
+				{
+					if (checkSame(met,file.classes[j].methodes[i])==false)
+					{
+						if (checkSame(metOther,file.classes[j].methodes[i])==false)
+						{
+							metOther.add(file.classes[j].methodes[i]);
+						}
+					}
+
+				}
+			}
+		}
+		return metOther;
+	}
 	public String calcul_CAC(Classe classe){
 		return null;
 		
