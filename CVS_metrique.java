@@ -10,6 +10,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class CVS_metrique {
 	public static void createFile(Fichier fichier) throws IOException{
+		if (fichier!=null){
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setSelectedFile(new File(fichier.modele+".csv"));
 		fileChooser.setFileFilter(new FileNameExtensionFilter("csv file","csv"));
