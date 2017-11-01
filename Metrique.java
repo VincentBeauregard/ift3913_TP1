@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class Metrique {
 	
 	public static String calculMetrique(Classe classe){
 		String ANA = calcul_ANA(classe);
-		return ANA+",1,2,3,4,5,6,7,8,9";
+		String NOM = calcul_NOM(classe);
+		return ANA+","+NOM+",2,3,4,5,6,7,8,9";
 		
 	}
 	public static String getMetric(Classe classe){
@@ -33,9 +36,50 @@ public class Metrique {
 		else
 			return "0";
 	}
-	public String calcul_NOM(Classe classe){
-		return null;
+	public static String calcul_NOM(Classe classe){
+		List<Methode> met=new ArrayList<Methode>();
+		recCheck(met,classe);
+		System.out.println(met.size());
+		return String.valueOf(met.size());
 		
+	}
+	public static void recCheck(List<Methode> met, Classe classe) {
+
+		for (int i=0;i<classe.methodes.length;i++)
+		{
+			if (!checkSame(met,classe.methodes[i] )){
+				met.add(classe.methodes[i]);
+			}
+
+		}
+		for (int i=0;i<classe.sousClasses.length;i++)
+		{
+			recCheck(met, classe.sousClasses[i]);
+		}
+		System.out.println(met.size());
+		return;
+	}
+	public static Boolean checkSame (List<Methode> met, Methode toCheck)
+	{
+		for (int i=0; i<met.size();i++)
+		{
+			Boolean flag=false;
+			if ((met.get(i).nom).equals(toCheck.nom)&&(met.get(i).type).equals(toCheck.type)&&met.get(i).arg.length==toCheck.arg.length)
+			{
+				flag=true;
+				for (int j=0;j<met.get(i).arg.length;j++){
+					if (!(met.get(i).arg[j].type.equals(toCheck.arg[j].type)))
+					{
+						flag=false;
+					}
+				}
+			}
+			if (flag==true)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	public String calcul_NOA(Classe classe){
 		return null;
