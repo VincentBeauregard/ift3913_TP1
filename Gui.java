@@ -16,9 +16,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.ListSelectionModel;
 
@@ -33,6 +36,7 @@ public class Gui{
 	private JTextField pathIn;
 	private JButton btnNewButton;
 	private JButton pathbtn;
+	private JButton calculbtn;
 	
 	private JLabel lblClasses;
 	private JLabel lblMethodes;
@@ -48,6 +52,7 @@ public class Gui{
 	private JList list_association;
 	
 	private JTextPane textPane_Details;
+	private JTextPane textPane_metrique;
 	
 	private SpringLayout springLayout;
 	private SpringLayout sl_panel_load;
@@ -85,7 +90,7 @@ public class Gui{
 	private void initialize() {
 		frame = new JFrame();
 		
-		frame.setBounds(100, 100, 800, 600);
+		frame.setBounds(100, 100, 1000, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
@@ -123,7 +128,7 @@ public class Gui{
 		sl_panel_load.putConstraint(SpringLayout.NORTH, pathbtn, 0, SpringLayout.NORTH, btnNewButton);
 		sl_panel_load.putConstraint(SpringLayout.WEST, pathbtn, 6, SpringLayout.EAST, pathIn);
 		sl_panel_load.putConstraint(SpringLayout.SOUTH, pathbtn, 0, SpringLayout.SOUTH, btnNewButton);
-		sl_panel_load.putConstraint(SpringLayout.EAST, pathbtn, -10, SpringLayout.EAST, panel_load);
+		sl_panel_load.putConstraint(SpringLayout.EAST, pathbtn, 95, SpringLayout.EAST, pathIn);
 		panel_load.add(pathbtn);
 		frame.getContentPane().add(panel_info);
 		sl_panel_info = new SpringLayout();
@@ -208,7 +213,6 @@ public class Gui{
 				sl_panel_info.putConstraint(SpringLayout.NORTH, scrollPane_detail, 0, SpringLayout.SOUTH, lblDetails);
 				sl_panel_info.putConstraint(SpringLayout.WEST, scrollPane_detail, 0, SpringLayout.WEST, lblDetails);
 				sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_detail, -10, SpringLayout.SOUTH, panel_info);
-				sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_detail, -10, SpringLayout.EAST, panel_info);
 				panel_info.add(scrollPane_detail);
 		
 		list_classes = new JList();
@@ -231,6 +235,13 @@ public class Gui{
 
 		pathIn.setText(current+"/");
 		
+		calculbtn = new JButton("Caluler Metrique");
+		sl_panel_load.putConstraint(SpringLayout.NORTH, calculbtn, 0, SpringLayout.NORTH, btnNewButton);
+		sl_panel_load.putConstraint(SpringLayout.WEST, calculbtn, 20, SpringLayout.EAST, pathbtn);
+		sl_panel_load.putConstraint(SpringLayout.SOUTH, calculbtn, 0, SpringLayout.SOUTH, btnNewButton);
+		sl_panel_load.putConstraint(SpringLayout.EAST, calculbtn, -10, SpringLayout.EAST, panel_load);
+		panel_load.add(calculbtn);
+		
 		
 		
 		
@@ -245,10 +256,10 @@ public class Gui{
 		panel_info.add(scrollPane_attributs);
 		JScrollPane scrollPane_methodes = new JScrollPane(list_methodes);
 		sl_panel_info.putConstraint(SpringLayout.NORTH, scrollPane_methodes, 0, SpringLayout.SOUTH, lblMethodes);
+		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_methodes, 246, SpringLayout.WEST, lblMethodes);
 		sl_panel_info.putConstraint(SpringLayout.NORTH, lblAssociations, 10, SpringLayout.SOUTH, scrollPane_methodes);
 		sl_panel_info.putConstraint(SpringLayout.WEST, scrollPane_methodes, 0, SpringLayout.WEST, lblMethodes);
 		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_methodes, 140, SpringLayout.SOUTH, lblMethodes);
-		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_methodes, -10, SpringLayout.EAST, panel_info);
 		panel_info.add(scrollPane_methodes);
 		JScrollPane scrollPane_ssClasses = new JScrollPane(list_sousClasses);
 		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_ssClasses, 246, SpringLayout.WEST, lblSousClasses);
@@ -258,11 +269,26 @@ public class Gui{
 		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_ssClasses, 140, SpringLayout.SOUTH, lblSousClasses);
 		panel_info.add(scrollPane_ssClasses);
 		JScrollPane scrollPane_association = new JScrollPane(list_association);
+		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_detail, 0, SpringLayout.EAST, scrollPane_association);
 		sl_panel_info.putConstraint(SpringLayout.NORTH, scrollPane_association, 0, SpringLayout.SOUTH, lblAssociations);
 		sl_panel_info.putConstraint(SpringLayout.WEST, scrollPane_association, 0, SpringLayout.WEST, lblAssociations);
 		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_association, 140, SpringLayout.SOUTH, lblAssociations);
-		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_association, -10, SpringLayout.EAST, panel_info);
+		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_association, 246, SpringLayout.WEST, lblAssociations);
 		panel_info.add(scrollPane_association);
+		
+		textPane_metrique = new JTextPane();
+		textPane_metrique.setEditable(false);
+		textPane_metrique.setBorder(new LineBorder(new Color(0, 0, 0)));
+		sl_panel_info.putConstraint(SpringLayout.SOUTH, textPane_metrique, -10, SpringLayout.SOUTH, panel_info);
+		sl_panel_info.putConstraint(SpringLayout.EAST, textPane_metrique, -10, SpringLayout.EAST, panel_info);
+		panel_info.add(textPane_metrique);
+		
+		JLabel lblmetrique = new JLabel("Metriques");
+		sl_panel_info.putConstraint(SpringLayout.NORTH, textPane_metrique, 0, SpringLayout.SOUTH, lblmetrique);
+		sl_panel_info.putConstraint(SpringLayout.WEST, textPane_metrique, 0, SpringLayout.WEST, lblmetrique);
+		sl_panel_info.putConstraint(SpringLayout.NORTH, lblmetrique, 0, SpringLayout.NORTH, lblClasses);
+		sl_panel_info.putConstraint(SpringLayout.WEST, lblmetrique, 20, SpringLayout.EAST, scrollPane_methodes);
+		panel_info.add(lblmetrique);
 		
 		// Action du bouton *Charger fichier*
 		//prend le chemin dans la boite de text 'pathIn' et l'envoie a TP1 pour parser le fichier
@@ -294,6 +320,18 @@ public class Gui{
 			}
 		});
 		
+
+		calculbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//TODO appeler la classe calculMetrique
+				try {
+					TP1.newCVS(file);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
 		// Action de la liste de classe lors d'une selection
 		//Active le changement d'affichage concordant avec la classe selectionner
 		list_classes.addListSelectionListener(new ListSelectionListener() {

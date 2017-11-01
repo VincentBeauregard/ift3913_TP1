@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.IOException;
+
 
 public class TP1 {
 	//private static Fichier test;
@@ -43,6 +46,8 @@ public class TP1 {
 	public static Fichier loadFile(String path){
 		System.out.println("path : "+path);
 		return Parse2.load(path);
-		
+	}
+	public static void newCVS(Fichier fichier) throws IOException{
+		CVS_metrique.createFile(fichier);
 	}
 }
