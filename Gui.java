@@ -442,7 +442,7 @@ public class Gui{
 		changeList(list_sousClasses,ssc);
 		changeList(list_association,lin);
 		list_association.setSelectedIndex(0);
-		changeMetricString(TP1.getMetric(c));
+		changeMetricString(TP1.getMetric(c,file));
 		changeDetailDisplay(file,classeindex,0,null);}
 		else changeDetailDisplay(file,classeindex,0,error);
 	}

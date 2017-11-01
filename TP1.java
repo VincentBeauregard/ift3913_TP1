@@ -20,7 +20,7 @@ public class TP1 {
 	public static void newCVS(Fichier fichier) throws IOException{
 		CVS_metrique.createFile(fichier);
 	}
-	public static String getMetric(Classe classe){
-		return Metrique.getMetric(classe);
+	public static String getMetric(Classe classe, Fichier file){
+		return Metrique.getMetric(classe, file);
 	}
 }

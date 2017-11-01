@@ -3,15 +3,18 @@ import java.util.List;
 
 public class Metrique {
 	
-	public static String calculMetrique(Classe classe){
+	public static String calculMetrique(Classe classe, Fichier file){
+		List<Methode> met=new ArrayList<Methode>();
+		List<Attribut> att=new ArrayList<Attribut>();
 		String ANA = calcul_ANA(classe);
-		String NOM = calcul_NOM(classe);
-		String NOA = calcul_NOA(classe);
-		return ANA+","+NOM+","+NOA+",3,4,5,6,7,8,9";
+		String NOM = calcul_NOM(classe,met);
+		String NOA = calcul_NOA(classe,att);
+		String ITC = calcul_ITC(classe, met, file);
+		return ANA+","+NOM+","+NOA+","+ITC+",4,5,6,7,8,9";
 		
 	}
-	public static String getMetric(Classe classe){
-		String metric = calculMetrique(classe);
+	public static String getMetric(Classe classe, Fichier file){
+		String metric = calculMetrique(classe, file);
 		String[] metrics = metric.split(",");
 		String rval = "ANA="+metrics[0]+"\n";
 		rval += "NOM="+metrics[1]+"\n";
@@ -37,8 +40,7 @@ public class Metrique {
 		else
 			return "0";
 	}
-	public static String calcul_NOM(Classe classe){
-		List<Methode> met=new ArrayList<Methode>();
+	public static String calcul_NOM(Classe classe, List<Methode> met){
 		recCheck(met,classe);
 		System.out.println(met.size());
 		return String.valueOf(met.size());
@@ -82,8 +84,7 @@ public class Metrique {
 		}
 		return false;
 	}
-	public static String calcul_NOA(Classe classe){
-		List<Attribut> att=new ArrayList<Attribut>();
+	public static String calcul_NOA(Classe classe, List<Attribut> att){
 		recCheckAtt(att,classe);
 		System.out.println(att.size());
 		return String.valueOf(att.size());
@@ -116,14 +117,33 @@ public class Metrique {
 		}
 		return false;
 	}
-	public String calcul_ITC(Classe classe){
+	public static String calcul_ITC(Classe classe,List<Methode> met, Fichier file ){
+		int count=0;
+		for(int i=0; i<met.size();i++)
+		{
+			for (int k=0; k<met.get(i).arg.length;k++)
+			{
+				for (int j=0;j<file.classes.length;j++)
+				{
+					if ((!file.classes[j].nom.equals(classe.nom)))
+					{
+						if (met.get(i).arg[k].type.equals(file.classes[j].nom))
+						{
+							count++;
+						}
+					}
+				}
+
+			}
+		}
+		return String.valueOf(count);
+		
+	}
+	public static String calcul_ETC(Classe classe){
 		return null;
 		
 	}
-	public String calcul_ETC(Classe classe){
-		return null;
-		
-	}
+
 	public String calcul_CAC(Classe classe){
 		return null;
 		

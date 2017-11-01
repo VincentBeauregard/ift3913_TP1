@@ -39,7 +39,7 @@ public class CVS_metrique {
 		for(int i=0; i < fichier.classes.length ; i++){
 			Classe c = fichier.classes[i];
 			rString+=c.nom;
-			rString+=","+Metrique.calculMetrique(c);
+			rString+=","+Metrique.calculMetrique(c,fichier);
 			rString+="\n";
 		}
 		
