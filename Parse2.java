@@ -23,9 +23,9 @@ public class Parse2 {
 
             //cette boucle divise les lignes du fichier en mots et les store dans le tableau tokens
             for (int i = 0; i < linelist.length; i++) {
-                linelist[i].replace(":","  ");
-                linelist[i].replace("("," ( ");
-                linelist[i].replace(")"," ) ");
+                linelist[i]=linelist[i].replace(":","  ");
+                linelist[i]=linelist[i].replace("("," ( ");
+                linelist[i]=linelist[i].replace(")"," ) ");
                 tempTokens=linelist[i].trim().split(" +");
                 int length = tokens.length;
                 String tmp[] = new String[length + tempTokens.length];
@@ -36,6 +36,10 @@ public class Parse2 {
                 for (int j = length; j < length+tempTokens.length; j++) {
                     tokens[j] = tempTokens[j-length];
                 }
+            }
+            for (int i=0; i<tokens.length;i++)
+            {
+                System.out.println(i + " "+ tokens[i]);
             }
             //appelle la fonction divide qui creera l,objet Fichier
             return divide(tokens);
@@ -165,7 +169,7 @@ public class Parse2 {
                 {
                     type = classtokens[i];
                 }
-
+                i++;
                 att.add(new Attribut(nom, type));
             }
             i++;
@@ -198,6 +202,10 @@ public class Parse2 {
                       else if (classtokens[i].indexOf(',')>0) {
                           typeAtt = classtokens[i].substring(0, classtokens[i].length() - 1);
                       }
+                      else{
+                          typeAtt = classtokens[i];
+                      }
+                      i++;
                       attOpp.add(new Attribut(nomAtt, typeAtt));
                   }
                   i++;
