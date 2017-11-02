@@ -13,6 +13,7 @@ public class Parse2 {
     public static Fichier load(String pathString) {
         List<String> lines = null;
         String[] linelist=null;
+        //tokens est tout les mots qui seront evaluer
         String[] tokens = new String[0];
         String[] tempTokens=null;
         Path path=FileSystems.getDefault().getPath(pathString);
@@ -55,7 +56,6 @@ public class Parse2 {
     }
     public static Fichier divide(String[] tokens)
     {
-        System.out.println("ok");
         //creation des variables necessaires
         List<Classe> classe= new ArrayList<Classe>();
         Classe[] classarray;
@@ -71,19 +71,10 @@ public class Parse2 {
         //si le document ne commence pas par MODEL, ce nest pas le bon format
         if (!tokens[0].equals("MODEL"))
         {
-            System.out.println(tokens[0]+tokens[0]);
-            System.out.println(tokens[0].length());
-            System.out.println(tokens[0].charAt(0));
-            System.out.println(tokens[0].charAt(1));
-            System.out.println(tokens[0].charAt(2));
-            System.out.println(tokens[0].charAt(3));
-            System.out.println(tokens[0].charAt(4));
-            System.out.println(tokens[0].charAt(5));
             return new Fichier(null,null,null,false);
         }
         else
         {
-            System.out.println("oka");
             nom_model=tokens[1];
         }
         //cherche les mots class, generalization, relation et aggregation pour traiter les mots qui suivent
@@ -118,6 +109,7 @@ public class Parse2 {
                 {
                     classtokens[j-start]=tokens[j];
                 }
+                //les generalizations sont evaluer apres que toutes les classes ont ete crees
                 gen.add(classtokens);
             }
             //jusquau prochain point virgule tout les mots seront envoye a un fonction qui creera la relation qui sera appeler plus tard
@@ -152,28 +144,22 @@ public class Parse2 {
                 agg.add(classtokens);
                 //System.out.println("lien.length parse2if2: "+lien.length);
             }
-            System.out.println("ok "+i);
-
         }
         //fait tout les appels pour creer les generalizations, relations et aggregation
         for (int i=0;i<gen.size();i++) {
-            System.out.println("ok1");
             treatGen(gen.get(i), classe);
         }
         for (int i=0;i<rel.size();i++) {
-            System.out.println("ok2");
             lien = treatRel(rel.get(i),lien,classe);
         }
         for (int i=0;i<agg.size();i++) {
-            System.out.println("ok3");
             lien = treatAgg(agg.get(i),lien,classe);
         }
         classarray= classe.toArray(new Classe[0]);
         //cree le fichier
-        System.out.println("ok4");
         return new Fichier(nom_model,classarray,lien,true);
     }
-    //cette fonction creer un objet classe et le place dans la liste classe
+    //cette fonction creer un objet classe et le place dans la liste classe du fichier
     public static void treatClass(String[] classtokens,List<Classe> classe )
     {
             //
@@ -186,27 +172,18 @@ public class Parse2 {
                 String nom=classtokens[i];
                 String type="";
                 i++;
-                if (classtokens[i].indexOf(',')>0) {
-                    type = classtokens[i].substring(0, classtokens[i].length() - 1);
-                }
-                else
-                {
-                    type = classtokens[i];
-                }
+                type = classtokens[i];
                 i++;
                 att.add(new Attribut(nom, type));
             }
             i++;
+            //place les attributs dans un array pour etre utiliser dans la creation de la classe
             Attribut[] attribute=att.toArray(new Attribut[0]);
             List<Methode> ope=new ArrayList<Methode>();;
             //cette boucle place toute les operations dans une liste
             while(!classtokens[i].equals(";"))
             {
-                if (classtokens[i].equals(","))
-                {
-                    i++;
-                }
-              List<Attribut> attOpp=new ArrayList<Attribut>();
+              List<Attribut> attOpp=new ArrayList<>();
               String nom=classtokens[i];
               String typeAtt="";
               String type="";
@@ -218,44 +195,22 @@ public class Parse2 {
                   {
                       String nomAtt=classtokens[i];
                       i++;
-
-                      if (classtokens[i].equals(","))
-                      {
-                          i++;
-                      }
-                      else if (classtokens[i].indexOf(',')>0) {
-                          typeAtt = classtokens[i].substring(0, classtokens[i].length() - 1);
-                      }
-                      else{
-                          typeAtt = classtokens[i];
-                      }
+                      typeAtt = classtokens[i];
                       i++;
                       attOpp.add(new Attribut(nomAtt, typeAtt));
                   }
                   i++;
-                  if (classtokens[i].equals(","))
-                  {
-                      i++;
-                  }
-                  if (classtokens[i].indexOf(',')>0) {
-                      type = classtokens[i].substring(0, classtokens[i].length() - 1);
-                  }
-                  else{
-                      type = classtokens[i];
-                  }
-                  i++;
-
+                  type = classtokens[i];
               }
               Attribut[] arg=attOpp.toArray(new Attribut[0]);
               ope.add(new Methode(nom, type, arg));
             }
             Methode[] operation=ope.toArray(new Methode[0]);
-            String[] liens=new String[0];
             //cree la classe
             classe.add(new Classe(Classnom,attribute,operation));
 
     }
-    //cette fonction modifie la liste sous-classe de la classe concerne
+    //cette fonction modifie les listes sous-classe et surclasse des classes concernees
     public static void treatGen(String[] classtokens, List<Classe> classe )
     {
         String class_concerne=classtokens[1].trim();
@@ -265,29 +220,14 @@ public class Parse2 {
             {
                 int i=3;
                 while(!classtokens[i].equals(";")) {
-                    if(classtokens[i].equals(",")){
-                        i++;
-                    }
-                    else if (classtokens[i].indexOf(',')>0)
-                    {
-                        for (int k=0;k<classe.size();k++ ) {
-                            if (classe.get(k).nom.equals(classtokens[i].substring(0, classtokens[i].length() - 1))) {
-                                //enleve la virgule a la fin des mots si necessaire
+
+                    for (int k=0;k<classe.size();k++ ) {
+                        if (classe.get(k).nom.equals(classtokens[i])) {
                                 classe.get(j).addsousclasse( classe.get(k));
                                 classe.get(k).addsurclasse( classe.get(j));
-                            }
-
-                        }
-
-                    }
-                    else{
-                        for (int k=0;k<classe.size();k++ ) {
-                            if (classe.get(k).nom.equals(classtokens[i])) {
-                                classe.get(j).addsousclasse( classe.get(k));
-                                classe.get(k).addsurclasse( classe.get(j));
-                            }
                         }
                     }
+
                     i++;
                 }
             }
@@ -304,13 +244,10 @@ public class Parse2 {
         class_concerne[1]=reltokens[7];
         cardinalite[1]=reltokens[8];
         //dans les classes concernees, dans sa liste d,index rajoute lindex du lien qui sera cree a la fin de la fonction
-        for (int j=0;j<classe.size();j++ )
-        {
-            if (classe.get(j).nom.trim().equals(class_concerne[0].trim())||classe.get(j).nom.trim().equals(class_concerne[1].trim()))
-            {
-                classe.get(j).addliens(lien.length);
+        for (Classe aClasse : classe)
+            if (aClasse.nom.trim().equals(class_concerne[0].trim()) || aClasse.nom.trim().equals(class_concerne[1].trim())) {
+                aClasse.addliens(lien.length);
             }
-        }
         //creation du lien
         int length = lien.length;
         Lien tmp[] = new Lien[length + 1];

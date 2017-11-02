@@ -2,22 +2,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Metrique {
-	
+	//fonction qui appelle les 10 fonctions de calcul et qui retourne les resultats en une string
 	public static String calculMetrique(Classe classe, Fichier file){
-		List<Methode> met=new ArrayList<Methode>();
-		List<Methode> metOther=new ArrayList<Methode>();
-		List<Attribut> att=new ArrayList<Attribut>();
+		//les deux listes sont calculees une seule fois mais utilisees par plusieurs calculs
+		//listes des methodes locales+heritees de la classe
+		List<Methode> met= new ArrayList<>();
+		//listes des attributs locals+herites de la classe
+		List<Attribut> att= new ArrayList<>();
 		String ANA = calcul_ANA(classe);
 		String NOM = calcul_NOM(classe,met);
 		String NOA = calcul_NOA(classe,att);
 		String ITC = calcul_ITC(classe, met, file);
-		String ETC = calcul_ETC(classe, met, metOther, file);
+		String ETC = calcul_ETC(classe, met, file);
 		String DIT = calcul_DIT(classe);
 		String NOD = calcul_NOD(classe);
 		String CAC = calcul_CAC(classe);
 		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+","+ CAC+","+DIT+","+NOD;
 		
 	}
+	//cette fonction communique avec les autres classes du logiciel et formatte la string
 	public static String getMetric(Fichier file,Classe classe){
 		String metric = calculMetrique(classe, file);
 		String[] metrics = metric.split(",");
@@ -35,26 +38,30 @@ public class Metrique {
 	}
 	public static String calcul_ANA(Classe classe){
 		int nb=classe.methodes.length;
-		System.out.println(nb);
 		int count=0;
+		//compte le nombre d'arguments des methodes une methode a la fois
 		for (int i=0;i<nb;i++){
 			count+=classe.methodes[i].arg.length;
 		}
+		//evite la division par zero
 		if(nb>0)
 			return String.format("%.2f", ((double)count/nb));
 		else
 			return "0";
 	}
 	public static String calcul_NOM(Classe classe, List<Methode> met){
+		//appelle la fonction recursive qui placera tout les methodes dans les listes SI elle n'y sont pas deja
 		recCheck(met,classe);
-		System.out.println(met.size());
+		//retourne la grandeur de la liste
 		return String.valueOf(met.size());
 		
 	}
+	//fonction recursive qui placera tout les methodes dans les listes SI elle n'y sont pas deja puis s'appelle elle-meme avec les surclasses en parametre
 	public static void recCheck(List<Methode> met, Classe classe) {
 
 		for (int i=0;i<classe.methodes.length;i++)
 		{
+			//checkSame verifie si la classe n'est pas deja dans la liste
 			if (!checkSame(met,classe.methodes[i] )){
 				met.add(classe.methodes[i]);
 			}
@@ -62,11 +69,12 @@ public class Metrique {
 		}
 		for (int i=0;i<classe.surClasses.length;i++)
 		{
+			//recursion
 			recCheck(met, classe.surClasses[i]);
 		}
-		System.out.println(met.size());
 		return;
 	}
+	//verifie si la methode est deja dans la liste
 	public static Boolean checkSame (List<Methode> met, Methode toCheck)
 	{
 		for (int i=0; i<met.size();i++)
@@ -89,12 +97,15 @@ public class Metrique {
 		}
 		return false;
 	}
+
 	public static String calcul_NOA(Classe classe, List<Attribut> att){
+		//appelle la fonction recursive qui placera tout les attributs dans les listes SI elle n'y sont pas deja
 		recCheckAtt(att,classe);
-		System.out.println(att.size());
+		//retourne la grandeur de la liste des attributs
 		return String.valueOf(att.size());
 		
 	}
+	//fonction recursive qui placera tout les attributs dans les listes SI elle n'y sont pas deja puis s'appelle elle-meme avec les surclasses en parametre
 	public static void recCheckAtt(List<Attribut> att, Classe classe) {
 
 		for (int i=0;i<classe.attributs.length;i++)
@@ -106,11 +117,13 @@ public class Metrique {
 		}
 		for (int i=0;i<classe.surClasses.length;i++)
 		{
+			//recursion avec les surclasses
+			//la recursion arrete lorsqu'il n'y a plus de surclasse
 			recCheckAtt(att, classe.surClasses[i]);
 		}
-		System.out.println(att.size());
 		return;
 	}
+	//verifie si l'attribut est deja dans la liste
 	public static Boolean checkSameAtt (List<Attribut> att, Attribut toCheck)
 	{
 		for (int i=0; i<att.size();i++)
@@ -122,10 +135,14 @@ public class Metrique {
 		}
 		return false;
 	}
+	//compte le nombre de fois que les types des arguments des methodes de la classe sont des autres classes
 	public static String calcul_ITC(Classe classe,List<Methode> met, Fichier file ){
+		//compte le nombre d'occurences
 		int count=0;
+		//met est la liste des methodes de la classe
 		for(int i=0; i<met.size();i++)
 		{
+			//pour chaque methode on passe chaque argument et on verifie avec les noms de chaque classe
 			for (int k=0; k<met.get(i).arg.length;k++)
 			{
 				for (int j=0;j<file.classes.length;j++)
@@ -144,10 +161,14 @@ public class Metrique {
 		return String.valueOf(count);
 		
 	}
-	public static String calcul_ETC(Classe classe, List<Methode>met, List<Methode>metOther, Fichier file){
-
+	//calcule le nombre de fois que la classe est un argument de methodes de d'autre classe
+	public static String calcul_ETC(Classe classe, List<Methode>met, Fichier file){
+		List<Methode> metOther= new ArrayList<>();
+		//cree un liste de toutes les methodes du fichier qui ne sont pas locales ou heritee a la classe concernee
 		metOther=otherMed(classe,met,metOther,file);
+		//compte le nb d'occurence
 		int count=0;
+		//verifie pour chaque methode de la liste la classe est le type d'un des arguments
 		for(int i=0; i<metOther.size();i++)
 		{
 			for (int k=0; k<metOther.get(i).arg.length;k++)
@@ -165,9 +186,10 @@ public class Metrique {
 		return String.valueOf(count);
 		
 	}
-
+	//cree un liste de toutes les methodes du fichier qui ne sont pas locales ou heritee a la classe concernee
 	public static List<Methode> otherMed(Classe classe, List<Methode>met,List<Methode>metOther, Fichier file)
 	{
+		//pour chaque classe, on prend chaque methode et on verifie si elle n'est pas dans la liste met ou dans la liste qu'on cree (metOther)
 		for (int j=0;j<file.classes.length;j++)
 		{
 			if ((!file.classes[j].nom.equals(classe.nom)))
@@ -187,12 +209,14 @@ public class Metrique {
 		}
 		return metOther;
 	}
+	//compte le nombre de lien de la classe et de ses surclasses par la recursion
 	public static String calcul_CAC(Classe classe){
 		List<Integer> lien=new ArrayList<Integer>();
 		recCheckLien(lien,classe);
 		return String.valueOf(lien.size());
 		
 	}
+	//rajouter le numero des liens de la classe et s'appelle elle-meme avec les surclasses si presente en parametre
 	public static void recCheckLien(List<Integer> lien, Classe classe) {
 
 		for (int i=0;i<classe.indexLiens.length;i++)
@@ -208,6 +232,7 @@ public class Metrique {
 		System.out.println(lien.size());
 		return;
 	}
+	//verifie si le lien est deja dans la liste pour eviter les doublons
 	public static Boolean checkSameLien (List<Integer> lien, int toCheck)
 	{
 		for (int i=0; i<lien.size();i++)
