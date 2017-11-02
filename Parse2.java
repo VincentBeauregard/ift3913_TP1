@@ -183,7 +183,7 @@ public class Parse2 {
             //cette boucle place toute les operations dans une liste
             while(!classtokens[i].equals(";"))
             {
-              List<Attribut> attOpp=new ArrayList<>();
+              List<Attribut> attOpp=new ArrayList<Attribut>();
               String nom=classtokens[i];
               String typeAtt="";
               String type="";

@@ -6,9 +6,9 @@ public class Metrique {
 	public static String calculMetrique(Classe classe, Fichier file){
 		//les deux listes sont calculees une seule fois mais utilisees par plusieurs calculs
 		//listes des methodes locales+heritees de la classe
-		List<Methode> met= new ArrayList<>();
+		List<Methode> met= new ArrayList<Methode>();
 		//listes des attributs locals+herites de la classe
-		List<Attribut> att= new ArrayList<>();
+		List<Attribut> att= new ArrayList<Attribut>();
 		String ANA = calcul_ANA(classe);
 		String NOM = calcul_NOM(classe,met);
 		String NOA = calcul_NOA(classe,att);
@@ -159,11 +159,10 @@ public class Metrique {
 			}
 		}
 		return String.valueOf(count);
-		
 	}
 	//calcule le nombre de fois que la classe est un argument de methodes de d'autre classe
 	public static String calcul_ETC(Classe classe, List<Methode>met, Fichier file){
-		List<Methode> metOther= new ArrayList<>();
+		List<Methode> metOther= new ArrayList<Methode>();
 		//cree un liste de toutes les methodes du fichier qui ne sont pas locales ou heritee a la classe concernee
 		metOther=otherMed(classe,met,metOther,file);
 		//compte le nb d'occurence

@@ -331,13 +331,12 @@ public class Gui{
 		});
 		
 
+		//bouton creant le fichier cvs
 		calculbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO appeler la classe calculMetrique
 				try {
 					TP1.newCVS(file);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -370,6 +369,7 @@ public class Gui{
             }
         });
 		
+		//Change l'affichage de la description du metric selectionnee
 		textPane_metrique.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent arg0) {
             	String textval = "";
@@ -399,6 +399,7 @@ public class Gui{
 		textPane_Details.setText(details);
 	}
 	
+	//change la liste de metric correspondant a la classe
 	private void changeMetricString(String metrics){
 		changeList(textPane_metrique,metrics.split(","));
 	}
