@@ -52,7 +52,8 @@ public class Gui{
 	private JList list_association;
 	
 	private JTextPane textPane_Details;
-	private JTextPane textPane_metrique;
+	private JList textPane_metrique;
+	private JTextPane textPane_metricdesc;
 	
 	private SpringLayout springLayout;
 	private SpringLayout sl_panel_load;
@@ -276,10 +277,9 @@ public class Gui{
 		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_association, 246, SpringLayout.WEST, lblAssociations);
 		panel_info.add(scrollPane_association);
 		
-		textPane_metrique = new JTextPane();
-		textPane_metrique.setEditable(false);
+		textPane_metrique = new JList();
+		sl_panel_info.putConstraint(SpringLayout.SOUTH, textPane_metrique, 10, SpringLayout.SOUTH, scrollPane_association);
 		textPane_metrique.setBorder(new LineBorder(new Color(0, 0, 0)));
-		sl_panel_info.putConstraint(SpringLayout.SOUTH, textPane_metrique, -10, SpringLayout.SOUTH, panel_info);
 		sl_panel_info.putConstraint(SpringLayout.EAST, textPane_metrique, -10, SpringLayout.EAST, panel_info);
 		panel_info.add(textPane_metrique);
 		
@@ -289,6 +289,16 @@ public class Gui{
 		sl_panel_info.putConstraint(SpringLayout.NORTH, lblmetrique, 0, SpringLayout.NORTH, lblClasses);
 		sl_panel_info.putConstraint(SpringLayout.WEST, lblmetrique, 20, SpringLayout.EAST, scrollPane_methodes);
 		panel_info.add(lblmetrique);
+		
+		textPane_metricdesc = new JTextPane();
+		textPane_metricdesc.setBorder(new LineBorder(new Color(0, 0, 0)));
+		JScrollPane scrollPane_metricdesc = new JScrollPane(textPane_metricdesc);
+
+		sl_panel_info.putConstraint(SpringLayout.NORTH, scrollPane_metricdesc, 5, SpringLayout.SOUTH, textPane_metrique);
+		sl_panel_info.putConstraint(SpringLayout.WEST, scrollPane_metricdesc, 0, SpringLayout.WEST, textPane_metrique);
+		sl_panel_info.putConstraint(SpringLayout.SOUTH, scrollPane_metricdesc, 0, SpringLayout.SOUTH, scrollPane_detail);
+		sl_panel_info.putConstraint(SpringLayout.EAST, scrollPane_metricdesc, 0, SpringLayout.EAST, textPane_metrique);
+		panel_info.add(scrollPane_metricdesc);
 		
 		// Action du bouton *Charger fichier*
 		//prend le chemin dans la boite de text 'pathIn' et l'envoie a TP1 pour parser le fichier
@@ -359,6 +369,29 @@ public class Gui{
                 }
             }
         });
+		
+		textPane_metrique.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent arg0) {
+            	String textval = "";
+                if (!arg0.getValueIsAdjusting()) {
+                	int Index = textPane_metrique.getSelectedIndex();
+                	if (Index==-1)Index=0;
+                	switch(Index){
+                	case 0 : textval="ANA(x) Nombre moyen d’arguments des méthodes locales pour la classe x.";break;
+                	case 1 : textval="NOM(x): Nombre  de  méthodes  locales/héritées  de  la  classe x.  Dans  le  cas  où  une méthode est héritée et redéfinie localement (même nom, même ordre et types des arguments et même type de retour), elle ne compte qu’une fois.";break;
+                	case 2 : textval="NOA(x): Nombre d’attributs locaux/hérités de la classe x";break;
+                	case 3 : textval="ITC(x): Nombre de fois où d’autres classes du diagramme apparaissent comme types des arguments des méthodes de x.";break;
+                	case 4 : textval="ETC(x): Nombre de fois où x apparaît comme type des arguments dans les méthodes des autres classes du diagramme.";break;
+                	case 5 : textval="CAC(x): Nombre d’associations (incluant les agrégations) locales/héritées auxquelles participe une classe x.";break;
+                	case 6 : textval="DIT(x): Taille du chemin le plus long reliant une classe x à une classe racine dans le graphe d’héritage";break;
+                	case 7 : textval="CLD(x): Taille du chemin le plus long reliant une classe x à une classe feuille dans le graphe d’héritage.";break;
+                	case 8 : textval="NOC(x): Nombre de sous-classes directes de x.";break;
+                	case 9 : textval="NOD(x) : Nombre de sous-classes directes et indirectes de x.";break;
+                	}
+                	textPane_metricdesc.setText(textval);
+                }
+            }
+        });
 	}
 	
 	//Change l'affichage de la boite detail selon le string en parametre
@@ -367,7 +400,7 @@ public class Gui{
 	}
 	
 	private void changeMetricString(String metrics){
-		textPane_metrique.setText(metrics);
+		changeList(textPane_metrique,metrics.split(","));
 	}
 	
 	//prepare l'affichage de la boite detail dependament que ce soit une relation ou une aggregation
@@ -442,7 +475,7 @@ public class Gui{
 		changeList(list_sousClasses,ssc);
 		changeList(list_association,lin);
 		list_association.setSelectedIndex(0);
-		changeMetricString(TP1.getMetric(c,file));
+		changeMetricString(TP1.getMetric(file,c));
 		changeDetailDisplay(file,classeindex,0,null);}
 		else changeDetailDisplay(file,classeindex,0,error);
 	}

@@ -12,22 +12,24 @@ public class Metrique {
 		String NOA = calcul_NOA(classe,att);
 		String ITC = calcul_ITC(classe, met, file);
 		String ETC = calcul_ETC(classe, met, metOther, file);
-		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+",4,5,6,7,8,9";
+		String DIT = calcul_DIT(classe);
+		String NOD = calcul_NOD(classe);
+		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+",none,"+DIT+","+NOD;
 		
 	}
-	public static String getMetric(Classe classe, Fichier file){
+	public static String getMetric(Fichier file,Classe classe){
 		String metric = calculMetrique(classe, file);
 		String[] metrics = metric.split(",");
-		String rval = "ANA="+metrics[0]+"\n";
-		rval += "NOM="+metrics[1]+"\n";
-		rval += "NOA="+metrics[2]+"\n";
-		rval += "ITC="+metrics[3]+"\n";
-		rval += "ETC="+metrics[4]+"\n";
-		rval += "CAC="+metrics[5]+"\n";
-		rval += "DIT="+metrics[6]+"\n";
-		rval += "CLD="+metrics[7]+"\n";
-		rval += "NOC="+metrics[8]+"\n";
-		rval += "NOD="+metrics[9]+"\n";
+		String rval = "ANA="+metrics[0]+",";
+		rval += "NOM="+metrics[1]+",";
+		rval += "NOA="+metrics[2]+",";
+		rval += "ITC="+metrics[3]+",";
+		rval += "ETC="+metrics[4]+",";
+		rval += "CAC="+metrics[5]+",";
+		rval += "DIT="+metrics[6]+",";
+		rval += "CLD="+metrics[7]+",";
+		rval += "NOC="+metrics[8]+",";
+		rval += "NOD="+metrics[9]+",";
 		return rval;
 	}
 	public static String calcul_ANA(Classe classe){
@@ -187,21 +189,57 @@ public class Metrique {
 	public String calcul_CAC(Classe classe){
 		return null;
 		
+	}private static int nbParent(Classe c){
+		int length = c.surClasses.length;
+		int rval = 0;
+		if(length == 0)
+				return 0;
+		else{
+			int maxtmp=0;
+			for(int i=0; i<length; i++){
+				rval = nbParent(c.surClasses[i]);
+				if(rval>maxtmp)
+					maxtmp=rval;
+				else
+					rval = maxtmp;
+			}
+			return rval + 1; 
+		}
 	}
-	public String calcul_DIT(Classe classe){
-		return null;
-		
+	public static String calcul_DIT(Classe classe){
+		return ""+nbParent(classe);
 	}
-	public String calcul_CLD(Classe classe){
-		return null;
-		
+	
+	private static int[] nbrchild(Classe c){
+		int length = c.sousClasses.length;
+		int rval[] = new int[2];
+		if(length==0){
+			rval[0]=0;
+			rval[1]=0;
+			return rval;
+			}
+		else{
+			int maxtmp=0;
+			int count = 0;
+			for(int i =0;i<length;i++){
+				rval = nbrchild(c.sousClasses[i]);
+				if(rval[1]>maxtmp)
+					maxtmp=rval[1];
+				else 
+					rval[1]=maxtmp;
+				rval[0]+=count;
+				count = rval[0];
+			}
+			rval[0] += length;
+			rval[1] += 1;
+			return rval;
+		}
 	}
-	public String calcul_NOC(Classe classe){
-		return null;
-		
-	}
-	public String calcul_NOD(Classe classe){
-		return null;
+	//considerant qu'il n'y a pas de cycle dans le grape des classes cettee fonction calcul le nombre de sous classe total
+	//le cas ou il y a un cycle, tout plente
+	public static String calcul_NOD(Classe classe){
+		int rvaltab[] = nbrchild(classe);
+		return rvaltab[1]+","+classe.sousClasses.length+","+rvaltab[0];
 		
 	}
 }
