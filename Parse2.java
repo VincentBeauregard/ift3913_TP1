@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 
 public class Parse2 {
@@ -18,12 +19,15 @@ public class Parse2 {
         try {
             //this returns null
             lines = Files.readAllLines(path, Charset.defaultCharset());
-            //System.out.println(lines);
+            lines.removeAll(Collections.singleton(null));
+            lines.removeAll(Collections.singleton(""));
             linelist = lines.toArray(new String[0]);
 
             //cette boucle divise les lignes du fichier en mots et les store dans le tableau tokens
             for (int i = 0; i < linelist.length; i++) {
                 linelist[i]=linelist[i].replace(":","  ");
+                linelist[i]=linelist[i].replace(",","  ");
+                linelist[i]=linelist[i].replace(";"," ; ");
                 linelist[i]=linelist[i].replace("("," ( ");
                 linelist[i]=linelist[i].replace(")"," ) ");
                 tempTokens=linelist[i].trim().split(" +");
@@ -39,7 +43,7 @@ public class Parse2 {
             }
             for (int i=0; i<tokens.length;i++)
             {
-                System.out.println(i + " "+ tokens[i]);
+                System.out.println(i + " "+ tokens[i]+" "+tokens[i].length());
             }
             //appelle la fonction divide qui creera l,objet Fichier
             return divide(tokens);
@@ -51,6 +55,7 @@ public class Parse2 {
     }
     public static Fichier divide(String[] tokens)
     {
+        System.out.println("ok");
         //creation des variables necessaires
         List<Classe> classe= new ArrayList<Classe>();
         Classe[] classarray;
@@ -59,13 +64,26 @@ public class Parse2 {
         List<String[]> gen= new ArrayList<String[]>();
         List<String[]> rel= new ArrayList<String[]>();
         List<String[]> agg= new ArrayList<String[]>();
+        for (int i=0;i<tokens.length;i++)
+        {
+            tokens[i]=tokens[i].replaceAll("[\u0000-\u001f]", "");
+        }
         //si le document ne commence pas par MODEL, ce nest pas le bon format
         if (!tokens[0].equals("MODEL"))
         {
+            System.out.println(tokens[0]+tokens[0]);
+            System.out.println(tokens[0].length());
+            System.out.println(tokens[0].charAt(0));
+            System.out.println(tokens[0].charAt(1));
+            System.out.println(tokens[0].charAt(2));
+            System.out.println(tokens[0].charAt(3));
+            System.out.println(tokens[0].charAt(4));
+            System.out.println(tokens[0].charAt(5));
             return new Fichier(null,null,null,false);
         }
         else
         {
+            System.out.println("oka");
             nom_model=tokens[1];
         }
         //cherche les mots class, generalization, relation et aggregation pour traiter les mots qui suivent
@@ -77,6 +95,7 @@ public class Parse2 {
                 int start=i;
                 while(!tokens[i].equals(";"))
                 {
+                    System.out.println(tokens[i]);
                     i++;
                 }
                 String[] classtokens=new String[i-start+1];
@@ -133,20 +152,25 @@ public class Parse2 {
                 agg.add(classtokens);
                 //System.out.println("lien.length parse2if2: "+lien.length);
             }
-            i++;
+            System.out.println("ok "+i);
+
         }
         //fait tout les appels pour creer les generalizations, relations et aggregation
         for (int i=0;i<gen.size();i++) {
+            System.out.println("ok1");
             treatGen(gen.get(i), classe);
         }
         for (int i=0;i<rel.size();i++) {
+            System.out.println("ok2");
             lien = treatRel(rel.get(i),lien,classe);
         }
         for (int i=0;i<agg.size();i++) {
+            System.out.println("ok3");
             lien = treatAgg(agg.get(i),lien,classe);
         }
         classarray= classe.toArray(new Classe[0]);
         //cree le fichier
+        System.out.println("ok4");
         return new Fichier(nom_model,classarray,lien,true);
     }
     //cette fonction creer un objet classe et le place dans la liste classe

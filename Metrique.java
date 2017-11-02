@@ -14,7 +14,8 @@ public class Metrique {
 		String ETC = calcul_ETC(classe, met, metOther, file);
 		String DIT = calcul_DIT(classe);
 		String NOD = calcul_NOD(classe);
-		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+",none,"+DIT+","+NOD;
+		String CAC = calcul_CAC(classe);
+		return ANA+","+NOM+","+NOA+","+ITC+","+ETC+","+ CAC+","+DIT+","+NOD;
 		
 	}
 	public static String getMetric(Fichier file,Classe classe){
@@ -186,10 +187,39 @@ public class Metrique {
 		}
 		return metOther;
 	}
-	public String calcul_CAC(Classe classe){
-		return null;
+	public static String calcul_CAC(Classe classe){
+		List<Integer> lien=new ArrayList<Integer>();
+		recCheckLien(lien,classe);
+		return String.valueOf(lien.size());
 		
-	}private static int nbParent(Classe c){
+	}
+	public static void recCheckLien(List<Integer> lien, Classe classe) {
+
+		for (int i=0;i<classe.indexLiens.length;i++)
+		{
+			if (!checkSameLien(lien,classe.indexLiens[i] )){
+				lien.add(classe.indexLiens[i]);
+			}
+		}
+		for (int i=0;i<classe.surClasses.length;i++)
+		{
+			recCheckLien(lien, classe.surClasses[i]);
+		}
+		System.out.println(lien.size());
+		return;
+	}
+	public static Boolean checkSameLien (List<Integer> lien, int toCheck)
+	{
+		for (int i=0; i<lien.size();i++)
+		{
+			if ((lien.get(i)).equals(toCheck))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	private static int nbParent(Classe c){
 		int length = c.surClasses.length;
 		int rval = 0;
 		if(length == 0)
